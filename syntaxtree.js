@@ -25,6 +25,12 @@ function draw() {
   tree.draw();
 }
 
+function mouseClicked() {
+  if (mouseX < 0 || mouseY < 0) return;
+  if (mouseX >= width || mouseY >= height) return;
+  saveCanvas("syntax_tree", "png");
+}
+
 function registerEditCallback() {
   let text_edit = select('#code');
   text_edit.input(onEdit);
