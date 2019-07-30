@@ -56,6 +56,14 @@ textarea {
   font-style: italic;
 }
 
+#note {
+  text-align: center;
+  font-size: smaller;
+  margin-top: 20px;
+  color: #777;
+  clear: both;
+}
+
 #footer {
   text-align: center;
   font-size: smaller;
