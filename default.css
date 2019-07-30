@@ -49,6 +49,13 @@ textarea {
   justify-content: center;
 }
 
+#tip {
+  margin-top: 10px;
+  color: #555;
+  text-align: center;
+  font-style: italic;
+}
+
 #footer {
   text-align: center;
   font-size: smaller;
