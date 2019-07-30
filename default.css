@@ -72,6 +72,11 @@ textarea {
   clear: both;
 }
 
+#footer a {
+  color: #00B;
+  text-decoration: none;
+}
+
 #version {
   position: absolute;
   right: 2px;
