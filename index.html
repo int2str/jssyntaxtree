@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<title>jsSyntaxTree</title>
+<script src="p5.js/p5.min.js"></script>
+<script src="p5.js/p5.dom.min.js"></script>
+<script src="node.js"></script>
+<script src="tree.js"></script>
+<script src="syntaxtree.js"></script>
+<script src="querystring.js"></script>
+<link rel="stylesheet" type="text/css" href="default.css" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name='viewport' content='width=device-width, initial-scale=1' />
+<meta name="author" content="Andre Eisenbach" />
+<meta name="description" content="jsSyntaxtree - a syntax tree generator for linguists. Draw syntax trees from labelled bracket notation phrases and include them into your assignment/homework." />
+<meta name="keywords" content="syntax tree, linguists, homework, labelled bracket notation" />
+
+<h1>jsSyntaxTree</h1>
+
+<div id="options">
+  <select id="font">
+    <option value="sans-serif" selected="selected">sans-serif</option>
+    <option value="serif">serif</option>
+    <option value="monospace">monospace</option>
+    <option value="cursive">cursive</option>
+    <option value="fantasy">fantasy</option>
+  </select>&nbsp; 
+  <select id="fontsize">
+    <option value="12">12</option>
+    <option value="14">14</option>
+    <option value="16" selected="selected">16</option>
+    <option value="18">18</option>
+    <option value="20">20</option>
+    <option value="24">24</option>
+    <option value="36">36</option>
+  </select>&nbsp;
+  <input type="checkbox" id="nodecolor" checked="checked" /> Color
+  <input type="checkbox" id="autosub"   checked="checked" /> Auto subscript
+  <input type="checkbox" id="triangles" checked="checked" /> Triangles
+</div>
+
+<div id="input">
+<h2>Phrase (labelled bracket notation)</h2>
+<textarea cols="40" rows="5" id="code">[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees]]]</textarea>
+</div>
+
+<div id="tree"></div>
+
+<div id="footer">
+  &copy; 2003-2019 IronCreek Software<br />
+  Idea and linguistic guidance - <b>Mei Eisenbach</b><br />
+  Coding &amp; design - <b>Andr&eacute; Eisenbach</b>
+  <div id="version">&nbsp;</div>
+</div>
