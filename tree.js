@@ -56,7 +56,7 @@ class Tree {
         continue;
 
       //
-      // Draw line (or Triangle) to paren
+      // Draw line (or triangle) to parent
       //
       smooth();
       stroke(80);
