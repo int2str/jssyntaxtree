@@ -26,14 +26,15 @@ function draw() {
 }
 
 function mouseClicked() {
-  if (mouseX < 0 || mouseY < 0) return;
-  if (mouseX >= width || mouseY >= height) return;
+  if (mouseX < 0 || mouseY < 0)
+    return;
+  if (mouseX >= width || mouseY >= height)
+    return;
   saveCanvas("syntax_tree", "png");
 }
 
 function registerEditCallback() {
-  let text_edit = select('#code');
-  text_edit.input(onEdit);
+  select('#code').input(onEdit);
 }
 
 function registerOptionCallbacks() {
@@ -75,6 +76,7 @@ function onFontsizeChanged() {
 function onEdit() {
   parse();
 
+  // Change textarea color based on whether the phrase is valid
   let text_edit = select('#code');
   text_edit.style("color", phrase_valid ? "#000" : "#A00");
 }

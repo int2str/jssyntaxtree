@@ -24,6 +24,9 @@ class Tree {
     translate(0, this.fontsize / 2);
 
     for (let node of this.nodes) {
+      //
+      // Draw node label in the appropriate color
+      //
       if (this.nodecolor) {
         if (node.leaf)
           fill(240, 0, 0);
@@ -37,6 +40,9 @@ class Tree {
       text(node.value, node.offset + node.width / 2,
            node.level * this.fontsize * 3);
 
+      //
+      // Draw subscript (if any)
+      //
       if (node.subscript != "") {
         let offset = node.offset + node.width / 2 + textWidth(node.value) / 2;
         textFont(this.font, this.fontsize * 3 / 4);
@@ -49,6 +55,9 @@ class Tree {
       if (node.p == -1)
         continue;
 
+      //
+      // Draw line (or Triangle) to paren
+      //
       smooth();
       stroke(80);
       let p = this.nodes[node.p];
@@ -129,6 +138,8 @@ class Tree {
 
   calculateSubscript() {
     let map = new Map();
+
+    // Count all labels
     for (let node of this.nodes) {
       if (node.leaf)
         continue;
