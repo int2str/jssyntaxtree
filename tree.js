@@ -242,7 +242,7 @@ class Tree {
   }
 
   getMaxWidth() {
-    return this.nodes.reduce((acc, node) => Math.max(acc, node.width), 0);
+    return this.nodes.reduce((acc, node) => (node.level == 0 ? acc + node.width : acc), 0);
   }
 
   getMaxLevel() {
