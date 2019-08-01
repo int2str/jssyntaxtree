@@ -18,7 +18,6 @@ window.onload =
 
   let params = (new URL(document.location)).searchParams;
   let query = decodeURI(window.location.search).replace('?', '');
-
   if (validatePhrase(query)) {
     e('code').value = query;
   }
@@ -26,11 +25,11 @@ window.onload =
   onEdit(); // Trigger initial render
 }
 
-function registerEditCallback() {
-  e('code').onkeyup = onEdit;
-}
+function
+registerEditCallback() { e('code').onkeyup = onEdit; }
 
-function registerOptionCallbacks() {
+function
+registerOptionCallbacks() {
   e('font').onchange = onFontChanged;
   e('fontsize').onchange = onFontsizeChanged;
   e('triangles').onchange = onTrianglesChanged;
@@ -38,53 +37,53 @@ function registerOptionCallbacks() {
   e('autosub').onchange = onSubscriptChanged;
 }
 
-function registerDownloadCallback() {
-  e('canvas').onclick = onCanvasClicked;
-}
+function
+registerDownloadCallback() { e('canvas').onclick = onCanvasClicked; }
 
-function onCanvasClicked() {
-  tree.download();
-}
+function
+onCanvasClicked() { tree.download(); }
 
-function onTrianglesChanged() {
-  let option = e('triangles');
-  tree.setTriangles(option.checked);
+function
+onTrianglesChanged() {
+  tree.setTriangles(e('triangles').checked);
   parse();
 }
 
-function onColorChanged() {
-  let option = e('nodecolor');
-  tree.setColor(option.checked);
+function
+onColorChanged() {
+  tree.setColor(e('nodecolor').checked);
   parse();
 }
 
-function onSubscriptChanged() {
-  let option = e('autosub');
-  tree.setSubscript(option.checked);
-  parse(); // Force subscript calculation
+function
+onSubscriptChanged() {
+  tree.setSubscript(e('autosub').checked);
+  parse();
 }
 
-function onFontChanged() {
-  let option = e('font');
-  tree.setFont(option.value);
-  parse(); // Force canvas resize
+function
+onFontChanged() {
+  tree.setFont(e('font').value);
+  parse();
 }
 
-function onFontsizeChanged() {
-  let option = e('fontsize');
-  tree.setFontsize(option.value);
-  parse(); // Force canvas resize
+function
+onFontsizeChanged() {
+  tree.setFontsize(e('fontsize').value);
+  parse();
 }
 
-function onEdit() { parse(); }
+function
+onEdit() { parse(); }
 
-function getPhrase() {
-  let text_edit = e('code');
-  let text = text_edit.value.replace(/\s+/g, " ").trim();
+function
+getPhrase() {
+  let text = e('code').value.replace(/\s+/g, " ").trim();
   return text.replace(/ *([\[\]]) */g, "$1");
 }
 
-function parse() {
+function
+parse() {
   let text = getPhrase();
   phrase_valid = validatePhrase(text);
   if (phrase_valid)

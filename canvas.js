@@ -46,7 +46,8 @@ class Canvas {
   }
 
   download(fn) {
-    let image = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    let image = this.canvas.toDataURL("image/png")
+                    .replace("image/png", "image/octet-stream");
     let link = e('link');
     link.setAttribute('href', image);
     link.setAttribute('download', fn);

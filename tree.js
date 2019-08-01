@@ -9,6 +9,19 @@ function back(a) {
   return a[a.length - 1];
 }
 
+class Node {
+  constructor(p, level) {
+    this.p = p;
+    this.level = level;
+    this.value = '';
+    this.leaf = true;
+    this.width = 0;
+    this.offset = 0;
+    this.child_width = 0;
+    this.subscript = '';
+  }
+}
+
 class Tree {
   constructor() {
     this.nodes = [];
@@ -236,13 +249,6 @@ class Tree {
     return this.nodes.reduce((acc, node) => Math.max(acc, node.level), 0);
   }
 
-  dumpNodes() {
-    console.log("Nodes: " + this.nodes.length);
-    console.log("===========================");
-    for (let node of this.nodes)
-      node.dump();
-  }
-
   parse(s) {
     this.parseString(s);
     this.calculateWidth();
@@ -254,7 +260,5 @@ class Tree {
     this.draw();
   }
 
-  download() {
-    this.canvas.download('syntax_tree.png');
-  }
+  download() { this.canvas.download('syntax_tree.png'); }
 }
