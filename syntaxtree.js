@@ -22,7 +22,7 @@ window.onload = function() {
 };
 
 function registerCallbacks() {
-  e('code').onkeyup = parse;
+  e('code').oninput = parse;
 
   e('font').onchange = function() {
     tree.setFont(e('font').value);
