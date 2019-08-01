@@ -37,9 +37,7 @@ class Tree {
     this.canvas.translate(0, this.fontsize / 2);
 
     for (let node of this.nodes) {
-      //
       // Draw node label in the appropriate color
-      //
       if (this.nodecolor) {
         if (node.leaf)
           this.canvas.setFillStyle('#CC0000');
@@ -52,9 +50,7 @@ class Tree {
       this.canvas.text(node.value, node.offset + node.width / 2,
                        node.level * this.fontsize * 3);
 
-      //
       // Draw subscript (if any)
-      //
       if (node.subscript != "") {
         let offset = node.offset + node.width / 2 +
                      this.canvas.textWidth(node.value) / 2;
@@ -68,9 +64,7 @@ class Tree {
       if (node.p == -1)
         continue;
 
-      //
       // Draw line (or triangle) to parent
-      //
       let p = this.nodes[node.p];
       if (this.triangles && node.value.indexOf(" ") != -1) {
         this.canvas.line(
