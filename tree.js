@@ -13,15 +13,15 @@ class Tree {
   constructor() {
     this.nodes = [];
     this.nodecolor = true;
-    this.font = "sans-serif";
     this.fontsize = 16;
     this.triangles = true;
     this.subscript = true;
+    this.canvas = null;
   }
 
   draw() {
-    background(255);
-    translate(0, this.fontsize / 2);
+    this.canvas.clear();
+    this.canvas.translate(0, this.fontsize / 2);
 
     for (let node of this.nodes) {
       //
@@ -29,27 +29,27 @@ class Tree {
       //
       if (this.nodecolor) {
         if (node.leaf)
-          fill(240, 0, 0);
+          this.canvas.setFillStyle('#CC0000');
         if (!node.leaf)
-          fill(0, 0, 200);
+          this.canvas.setFillStyle('#0000CC');
       } else {
-        fill(0);
+        this.canvas.setFillStyle('black');
       }
 
-      noStroke();
-      text(node.value, node.offset + node.width / 2,
-           node.level * this.fontsize * 3);
+      this.canvas.text(node.value, node.offset + node.width / 2,
+                       node.level * this.fontsize * 3);
 
       //
       // Draw subscript (if any)
       //
       if (node.subscript != "") {
-        let offset = node.offset + node.width / 2 + textWidth(node.value) / 2;
-        textFont(this.font, this.fontsize * 3 / 4);
-        offset += textWidth(node.subscript) / 2;
-        text(node.subscript, offset,
-             node.level * this.fontsize * 3 + this.fontsize / 2);
-        textFont(this.font, this.fontsize); // Reset font
+        let offset = node.offset + node.width / 2 +
+                     this.canvas.textWidth(node.value) / 2;
+        this.canvas.setFontSize(this.fontsize * 3 / 4);
+        offset += this.canvas.textWidth(node.subscript) / 2;
+        this.canvas.text(node.subscript, offset,
+                         node.level * this.fontsize * 3 + this.fontsize / 2);
+        this.canvas.setFontSize(this.fontsize); // Reset font
       }
 
       if (node.p == -1)
@@ -58,33 +58,37 @@ class Tree {
       //
       // Draw line (or triangle) to parent
       //
-      smooth();
-      stroke(80);
       let p = this.nodes[node.p];
       if (this.triangles && node.value.indexOf(" ") != -1) {
-        line(p.offset + p.width / 2,
-             p.level * this.fontsize * 3 + this.fontsize, node.offset + PADDING,
-             node.level * this.fontsize * 3 - 5);
-        line(p.offset + p.width / 2,
-             p.level * this.fontsize * 3 + this.fontsize,
-             node.offset + node.width - PADDING,
-             node.level * this.fontsize * 3 - 5);
-        line(node.offset + PADDING, node.level * this.fontsize * 3 - 5,
-             node.offset + node.width - PADDING,
-             node.level * this.fontsize * 3 - 5);
+        this.canvas.line(
+            p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
+            node.offset + PADDING, node.level * this.fontsize * 3 - 5);
+        this.canvas.line(p.offset + p.width / 2,
+                         p.level * this.fontsize * 3 + this.fontsize,
+                         node.offset + node.width - PADDING,
+                         node.level * this.fontsize * 3 - 5);
+        this.canvas.line(node.offset + PADDING,
+                         node.level * this.fontsize * 3 - 5,
+                         node.offset + node.width - PADDING,
+                         node.level * this.fontsize * 3 - 5);
       } else {
-        line(p.offset + p.width / 2,
-             p.level * this.fontsize * 3 + this.fontsize,
-             node.offset + node.width / 2, node.level * this.fontsize * 3 - 5);
+        this.canvas.line(
+            p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
+            node.offset + node.width / 2, node.level * this.fontsize * 3 - 5);
       }
     }
   }
 
+  setCanvas(c) { this.canvas = new Canvas(c); }
+
   setColor(e) { this.nodecolor = e; }
 
-  setFont(f) { this.font = f; }
+  setFont(f) { this.canvas.setFont(f); }
 
-  setFontsize(s) { this.fontsize = parseInt(s, 10); }
+  setFontsize(s) {
+    this.fontsize = parseInt(s, 10);
+    this.canvas.setFontSize(this.fontsize);
+  }
 
   setTriangles(t) { this.triangles = t; }
 
@@ -173,7 +177,7 @@ class Tree {
   calculateWidth() {
     // Reset child width and calculate text width
     for (let node of this.nodes) {
-      node.width = textWidth(node.value) + PADDING;
+      node.width = this.canvas.textWidth(node.value) + PADDING;
       node.child_width = 0;
     }
 
@@ -240,12 +244,17 @@ class Tree {
   }
 
   parse(s) {
-    textFont(this.font, this.fontsize);
     this.parseString(s);
     this.calculateWidth();
     if (this.subscript)
       this.calculateSubscript();
-    resizeCanvas(this.getMaxWidth(),
-                 (this.getMaxLevel() + 1) * this.fontsize * 3 - this.fontsize);
+    this.canvas.resize(this.getMaxWidth(),
+                       (this.getMaxLevel() + 1) * this.fontsize * 3 -
+                           this.fontsize);
+    this.draw();
+  }
+
+  download() {
+    this.canvas.download('syntax_tree.png');
   }
 }

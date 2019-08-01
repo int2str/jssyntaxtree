@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <title>jsSyntaxTree</title>
-<script src="p5.js/p5.min.js"></script>
-<script src="p5.js/p5.dom.min.js"></script>
 <script src="node.js"></script>
+<script src="canvas.js"></script>
 <script src="tree.js"></script>
 <script src="syntaxtree.js"></script>
-<script src="querystring.js"></script>
 <link rel="stylesheet" type="text/css" href="default.css" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -42,7 +40,7 @@
 <textarea cols="40" rows="5" id="code">[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees]]]</textarea>
 </div>
 
-<div id="tree"></div>
+<div id="tree"><canvas id="canvas" width="100" height="100" /></div>
 
 <div id="tip"><strong>Tip:</strong> Click on the syntax tree image to download a copy.</div>
 
@@ -58,3 +56,5 @@ you can find the old version at http://ironcreek.net/phpsyntaxtree.legacy</div>
   <a href="https://github.com/int2str/jssyntaxtree">https://github.com/int2str/jssyntaxtree</a>
   <div id="version">&nbsp;</div>
 </div>
+
+<a id="link" />
