@@ -4,7 +4,6 @@
 const VERSION = "v1.01";
 
 let tree = new Tree();
-let phrase_valid = false;
 
 function e(id) { return document.getElementById(id); }
 
@@ -60,8 +59,7 @@ function getPhrase() {
 
 function parse() {
   let text = getPhrase();
-  phrase_valid = validatePhrase(text);
-  if (phrase_valid)
+  if (validatePhrase(text))
     tree.parse(text);
 }
 
