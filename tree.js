@@ -107,6 +107,7 @@ class Tree {
       LABEL : 1,
       VALUE : 2,
       APPENDING : 3,
+      SUBSCRIPT : 4
     }
 
     let state = State.IDLE;
@@ -127,6 +128,12 @@ class Tree {
         parents.pop();
         break;
 
+      case '_':
+        if (state == State.LABEL) {
+          state = State.SUBSCRIPT;
+          break;
+        }
+        // Fallthrough
       case ' ':
         if (state != State.APPENDING) {
           state = State.APPENDING;
@@ -141,7 +148,11 @@ class Tree {
           this.nodes.push(new Node(back(parents), parents.length));
           ++idx;
         }
-        back(this.nodes).value += c;
+        if (state == State.SUBSCRIPT) {
+          back(this.nodes).subscript += c;
+        } else {
+          back(this.nodes).value += c;
+        }
         break;
       }
     }
@@ -152,7 +163,7 @@ class Tree {
 
     // Count all labels
     for (let node of this.nodes) {
-      if (node.leaf)
+      if (node.leaf || node.subscript != '')
         continue;
       if (map.has(node.value)) {
         map.set(node.value, map.get(node.value) + 1);
@@ -170,7 +181,7 @@ class Tree {
     // Add subscript (iterates backwards)
     for (let j = this.nodes.length - 1; j != -1; --j) {
       let node = this.nodes[j];
-      if (node.leaf)
+      if (node.leaf || node.subscript != '')
         continue;
       if (!map.get(node.value))
         continue;
