@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
-const VERSION = "v1.01";
+const VERSION = "v1.02";
 
 let tree = new Tree();
 
