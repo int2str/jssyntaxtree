@@ -18,6 +18,8 @@ window.onload = function() {
     e('code').value = query;
   }
 
+  rotateTip();
+  setInterval(rotateTip, 30*1000)
   parse();
 };
 
