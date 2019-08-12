@@ -102,13 +102,7 @@ class Tree {
   setSubscript(s) { this.subscript = s; }
 
   parseString(s) {
-    const State = {
-      IDLE : 0,
-      LABEL : 1,
-      VALUE : 2,
-      APPENDING : 3,
-      SUBSCRIPT : 4
-    }
+    const State = {IDLE : 0, LABEL : 1, VALUE : 2, APPENDING : 3, SUBSCRIPT : 4}
 
     let state = State.IDLE;
     let idx = 0;
@@ -247,7 +241,8 @@ class Tree {
   }
 
   getMaxWidth() {
-    return this.nodes.reduce((acc, node) => (node.level == 0 ? acc + node.width : acc), 0);
+    return this.nodes.reduce(
+        (acc, node) => (node.level == 0 ? acc + node.width : acc), 0);
   }
 
   getMaxLevel() {

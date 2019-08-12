@@ -19,7 +19,7 @@ window.onload = function() {
   }
 
   rotateTip();
-  setInterval(rotateTip, 30*1000)
+  setInterval(rotateTip, 30 * 1000)
   parse();
 };
 
