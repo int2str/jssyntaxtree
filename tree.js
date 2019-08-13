@@ -116,11 +116,9 @@ class Tree {
         break;
 
       case '_':
-        if (state == State.LABEL) {
-          state = State.SUBSCRIPT;
-          break;
-        }
-        // Fallthrough
+        state = State.SUBSCRIPT;
+        break;
+
       case ' ':
         if (state != State.APPENDING) {
           state = State.APPENDING;
@@ -178,7 +176,8 @@ class Tree {
 
     // Reset child width and calculate text width
     for (let node of this.nodes) {
-      node.width = this.canvas.textWidth(node.value) + PADDING;
+      node.width = this.canvas.textWidth(node.value) +
+                   this.canvas.textWidth(node.subscript) * 3 / 4 + PADDING;
       node.child_width = 0;
     }
 
