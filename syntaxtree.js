@@ -18,9 +18,10 @@ window.onload = function() {
     e('code').value = query;
   }
 
+  parse();
+
   rotateTip();
   setInterval(rotateTip, 30 * 1000)
-  parse();
 };
 
 function registerCallbacks() {
@@ -54,15 +55,12 @@ function registerCallbacks() {
   e('canvas').onclick = function() { tree.download(); };
 }
 
-function getPhrase() {
-  let text = e('code').value.replace(/\s+/g, " ").trim();
-  return text.replace(/ *([\[\]]) */g, "$1");
-}
-
 function parse() {
-  let text = getPhrase();
-  if (validatePhrase(text))
-    tree.parse(text);
+  let phrase = e('code').value.replace(
+      /\s+/g, " "); // Replace all whitespace with spaces
+  phrase = phrase.replace(/ *([\[\]]) */g, "$1"); // Remove duplicate spaces
+  if (validatePhrase(phrase))
+    tree.parse(phrase);
 }
 
 function validatePhrase(p) {

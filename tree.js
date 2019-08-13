@@ -3,11 +3,7 @@
 
 const PADDING = 20;
 
-function back(a) {
-  if (a.length == 0)
-    return -1;
-  return a[a.length - 1];
-}
+function back(a) { return a.length == 0 ? -1 : a[a.length - 1]; }
 
 class Node {
   constructor(p, level) {
@@ -39,10 +35,7 @@ class Tree {
     for (let node of this.nodes) {
       // Draw node label in the appropriate color
       if (this.nodecolor) {
-        if (node.leaf)
-          this.canvas.setFillStyle('#CC0000');
-        if (!node.leaf)
-          this.canvas.setFillStyle('#0000CC');
+        this.canvas.setFillStyle(node.leaf ? '#CC0000' : '#0000CC');
       } else {
         this.canvas.setFillStyle('black');
       }
@@ -159,11 +152,7 @@ class Tree {
     for (let node of this.nodes) {
       if (node.leaf || node.subscript != '')
         continue;
-      if (map.has(node.value)) {
-        map.set(node.value, map.get(node.value) + 1);
-      } else {
-        map.set(node.value, 1);
-      }
+      map.set(node.value, map.get(node.value) + 1 || 1);
     }
 
     // Remove non-duped labels
@@ -179,14 +168,14 @@ class Tree {
         continue;
       if (!map.get(node.value))
         continue;
-      if (map.get(node.value) < 1)
-        continue;
-      node.subscript = "" + map.get(node.value);
+      node.subscript = map.get(node.value);
       map.set(node.value, map.get(node.value) - 1);
     }
   }
 
   calculateWidth() {
+    this.canvas.setFontSize(this.fontsize);
+
     // Reset child width and calculate text width
     for (let node of this.nodes) {
       node.width = this.canvas.textWidth(node.value) + PADDING;
@@ -199,10 +188,10 @@ class Tree {
         this.nodes[j].width = this.nodes[j].child_width;
       }
 
-      if (this.nodes[j].p == -1)
-        continue;
-      this.nodes[this.nodes[j].p].child_width += this.nodes[j].width;
-      this.nodes[this.nodes[j].p].leaf = false;
+      if (this.nodes[j].p != -1) {
+        this.nodes[this.nodes[j].p].child_width += this.nodes[j].width;
+        this.nodes[this.nodes[j].p].leaf = false;
+      }
     }
 
     // Fix node sizing if parent node is bigger than sum
@@ -240,13 +229,13 @@ class Tree {
     return children;
   }
 
-  getMaxWidth() {
-    return this.nodes.reduce(
+  resizeCanvas() {
+    let max_width = this.nodes.reduce(
         (acc, node) => (node.level == 0 ? acc + node.width : acc), 0);
-  }
-
-  getMaxLevel() {
-    return this.nodes.reduce((acc, node) => Math.max(acc, node.level), 0);
+    let max_level =
+        this.nodes.reduce((acc, node) => Math.max(acc, node.level), 0);
+    this.canvas.resize(max_width,
+                       (max_level + 1) * this.fontsize * 3 - this.fontsize);
   }
 
   parse(s) {
@@ -254,9 +243,7 @@ class Tree {
     this.calculateWidth();
     if (this.subscript)
       this.calculateSubscript();
-    this.canvas.resize(this.getMaxWidth(),
-                       (this.getMaxLevel() + 1) * this.fontsize * 3 -
-                           this.fontsize);
+    this.resizeCanvas();
     this.draw();
   }
 
