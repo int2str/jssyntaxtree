@@ -1,8 +1,6 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
-import e from './dom.js';
-
 export default class Canvas {
   constructor(c) {
     this.canvas = c;
@@ -52,7 +50,7 @@ export default class Canvas {
   download(fn) {
     let image = this.canvas.toDataURL("image/png")
                     .replace("image/png", "image/octet-stream");
-    let link = e('link');
+    let link = document.getElementById('link');
     link.setAttribute('href', image);
     link.setAttribute('download', fn);
     link.click();

@@ -3,7 +3,6 @@
 
 const VERSION = "v1.03";
 
-import e from './dom.js';
 import Tree from './tree.js';
 import rotateTip from './tip.js';
 
@@ -24,6 +23,8 @@ window.onload = function() {
   rotateTip();
   setInterval(rotateTip, 30 * 1000);
 };
+
+function e(id) { return document.getElementById(id); }
 
 function registerCallbacks() {
   e('code').oninput = parse;
