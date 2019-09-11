@@ -1,5 +1,9 @@
+// jsSyntaxTree - A syntax tree graph generator
+// (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
-class Canvas {
+import e from './dom.js';
+
+export default class Canvas {
   constructor(c) {
     this.canvas = c;
     this.font = 'sans-serif';

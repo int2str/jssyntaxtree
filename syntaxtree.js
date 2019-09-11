@@ -3,17 +3,18 @@
 
 const VERSION = "v1.03";
 
-let tree = new Tree();
+import e from './dom.js';
+import Tree from './tree.js';
+import rotateTip from './tip.js';
 
-function e(id) { return document.getElementById(id); }
+let tree = new Tree();
 
 window.onload = function() {
   e('version').innerHTML = VERSION;
   tree.setCanvas(e('canvas'));
   registerCallbacks();
 
-  let params = (new URL(document.location)).searchParams;
-  let query = decodeURI(window.location.search).replace('?', '');
+  const query = decodeURI(window.location.search).replace('?', '');
   if (validatePhrase(query)) {
     e('code').value = query;
   }
@@ -21,7 +22,7 @@ window.onload = function() {
   parse();
 
   rotateTip();
-  setInterval(rotateTip, 30 * 1000)
+  setInterval(rotateTip, 30 * 1000);
 };
 
 function registerCallbacks() {
@@ -76,9 +77,9 @@ function validatePhrase(p) {
 function bracketsOpen(p) {
   let o = 0;
   for (let c of p) {
-    if (c == '[')
+    if (c === '[')
       ++o;
-    if (c == ']')
+    if (c === ']')
       --o;
   }
   return o;

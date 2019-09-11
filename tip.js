@@ -11,7 +11,7 @@ const tips = [
 
 let tip_idx = Math.floor(Math.random() * tips.length);
 
-function rotateTip() {
+export default function rotateTip() {
   document.getElementById('tip').innerHTML =
       '<strong>Tip:</strong> ' + tips[tip_idx++ % tips.length];
 }

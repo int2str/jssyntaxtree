@@ -3,22 +3,12 @@
 
 const PADDING = 20;
 
-function back(a) { return a.length == 0 ? -1 : a[a.length - 1]; }
+import Canvas from './canvas.js';
+import Node from "./node.js";
 
-class Node {
-  constructor(p, level) {
-    this.p = p;
-    this.level = level;
-    this.value = '';
-    this.leaf = true;
-    this.width = 0;
-    this.offset = 0;
-    this.child_width = 0;
-    this.subscript = '';
-  }
-}
+function back(a) { return a.length === 0 ? -1 : a[a.length - 1]; }
 
-class Tree {
+export default class Tree {
   constructor() {
     this.nodes = [];
     this.nodecolor = true;
@@ -54,7 +44,7 @@ class Tree {
         this.canvas.setFontSize(this.fontsize); // Reset font
       }
 
-      if (node.p == -1)
+      if (node.p === -1)
         continue;
 
       // Draw line (or triangle) to parent
@@ -95,7 +85,8 @@ class Tree {
   setSubscript(s) { this.subscript = s; }
 
   parseString(s) {
-    const State = {IDLE : 0, LABEL : 1, VALUE : 2, APPENDING : 3, SUBSCRIPT : 4}
+    const State =
+        {IDLE : 0, LABEL : 1, VALUE : 2, APPENDING : 3, SUBSCRIPT : 4};
 
     let state = State.IDLE;
     let idx = 0;
@@ -128,12 +119,12 @@ class Tree {
         }
         // Fallthrough
       default:
-        if (state == State.VALUE) {
+        if (state === State.VALUE) {
           state = State.APPENDING;
           this.nodes.push(new Node(back(parents), parents.length));
           ++idx;
         }
-        if (state == State.SUBSCRIPT) {
+        if (state === State.SUBSCRIPT) {
           back(this.nodes).subscript += c;
         } else {
           back(this.nodes).value += c;
@@ -155,7 +146,7 @@ class Tree {
 
     // Remove non-duped labels
     map.forEach((value, key, map) => {
-      if (value == 1)
+      if (value === 1)
         map.delete(key);
     });
 
@@ -222,7 +213,7 @@ class Tree {
   getChildren(p) {
     let children = [];
     for (let i = 0; i != this.nodes.length; ++i) {
-      if (this.nodes[i].p == p)
+      if (this.nodes[i].p === p)
         children.push(i);
     }
     return children;
@@ -230,7 +221,7 @@ class Tree {
 
   resizeCanvas() {
     let max_width = this.nodes.reduce(
-        (acc, node) => (node.level == 0 ? acc + node.width : acc), 0);
+        (acc, node) => (node.level === 0 ? acc + node.width : acc), 0);
     let max_level =
         this.nodes.reduce((acc, node) => Math.max(acc, node.level), 0);
     this.canvas.resize(max_width,
