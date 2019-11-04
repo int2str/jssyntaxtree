@@ -26,18 +26,26 @@ export default class Canvas {
     this.context.textBaseline = 'top';
   }
 
-  translate(x, y) { this.context.translate(x, y); }
+  translate(x, y) {
+    this.context.translate(x, y);
+  }
 
   text(t, x, y) {
     this.context.font = this.fontsize + 'px ' + this.font;
     this.context.fillText(t, x, y);
   }
 
-  setFont(f) { this.font = f; }
+  setFont(f) {
+    this.font = f;
+  }
 
-  setFontSize(s) { this.fontsize = s; }
+  setFontSize(s) {
+    this.fontsize = s;
+  }
 
-  setFillStyle(s) { this.context.fillStyle = s; }
+  setFillStyle(s) {
+    this.context.fillStyle = s;
+  }
 
   line(x1, y1, x2, y2) {
     let ctx = this.context;
@@ -48,8 +56,8 @@ export default class Canvas {
   }
 
   download(fn) {
-    let image = this.canvas.toDataURL("image/png")
-                    .replace("image/png", "image/octet-stream");
+    let image = this.canvas.toDataURL('image/png')
+                    .replace('image/png', 'image/octet-stream');
     let link = document.getElementById('link');
     link.setAttribute('href', image);
     link.setAttribute('download', fn);

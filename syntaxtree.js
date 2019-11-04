@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
-const VERSION = "v1.03";
+const VERSION = 'v1.03';
 
 import Tree from './tree.js';
 import rotateTip from './tip.js';
@@ -14,7 +14,7 @@ window.onload = function() {
   registerCallbacks();
 
   const query = decodeURI(window.location.search).replace('?', '');
-  if (validatePhrase(query)) {
+  if (validatePhrase(query) == null) {
     e('code').value = query;
   }
 
@@ -24,7 +24,9 @@ window.onload = function() {
   setInterval(rotateTip, 30 * 1000);
 };
 
-function e(id) { return document.getElementById(id); }
+function e(id) {
+  return document.getElementById(id);
+}
 
 function registerCallbacks() {
   e('code').oninput = parse;
@@ -54,43 +56,39 @@ function registerCallbacks() {
     parse();
   };
 
-  e('canvas').onclick = function() { tree.download(); };
+  e('canvas').onclick = function() {
+    tree.download();
+  };
 }
 
 function parse() {
   let phrase = e('code').value.replace(
-      /\s+/g, " "); // Replace all whitespace with spaces
-  phrase = phrase.replace(/ *([\[\]]) */g, "$1"); // Remove duplicate spaces
-  let brackets = bracketsOpen(phrase);
-  if (validatePhrase(phrase)) {
+      /\s+/g, ' ');  // Replace all whitespace with spaces
+  phrase = phrase.replace(/ *([\[\]]) */g, '$1');  // Remove duplicate spaces
+  let validation_error = validatePhrase(phrase);
+  if (validation_error == null) {
     tree.parse(phrase);
-    e('parse-error').innerHTML = "";
+    e('parse-error').innerHTML = '';
   } else {
-    if (brackets > 0) {
-      e('parse-error').innerHTML = brackets + " bracket(s) open [";
-    } else {
-      e('parse-error').innerHTML = Math.abs(brackets) + " too many closed bracket(s) ]";
-    }
+    e('parse-error').innerHTML = validation_error;
   }
 }
 
 function validatePhrase(p) {
-  if (p.length < 3)
-    return false;
+  if (p.length < 3) return 'Phrase too short';
   if (p[0] != '[' || p[p.length - 1] != ']')
-    return false;
-  if (bracketsOpen(p) != 0)
-    return false;
-  return true;
+    return 'Phrase must start with [ and end with ]';
+  let brackets = bracketsOpen(p);
+  if (brackets > 0) return brackets + ' bracket(s) open [';
+  if (brackets < 0) return Math.abs(brackets) + ' too many closed bracket(s) ]';
+  return null;
 }
 
 function bracketsOpen(p) {
   let o = 0;
   for (let c of p) {
-    if (c === '[')
-      ++o;
-    if (c === ']')
-      --o;
+    if (c === '[') ++o;
+    if (c === ']') --o;
   }
   return o;
 }
