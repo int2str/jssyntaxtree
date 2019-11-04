@@ -67,9 +67,9 @@ function parse() {
     e('parse-error').innerHTML = "";
   } else {
     if (brackets > 0) {
-      e('parse-error').innerHTML = brackets + " brackets open [";
+      e('parse-error').innerHTML = brackets + " bracket(s) open [";
     } else {
-      e('parse-error').innerHTML = Math.abs(brackets) + " too many closed brackets ]";
+      e('parse-error').innerHTML = Math.abs(brackets) + " too many closed bracket(s) ]";
     }
   }
 }
