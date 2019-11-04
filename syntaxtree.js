@@ -61,8 +61,17 @@ function parse() {
   let phrase = e('code').value.replace(
       /\s+/g, " "); // Replace all whitespace with spaces
   phrase = phrase.replace(/ *([\[\]]) */g, "$1"); // Remove duplicate spaces
-  if (validatePhrase(phrase))
+  let brackets = bracketsOpen(phrase);
+  if (validatePhrase(phrase)) {
     tree.parse(phrase);
+    e('parse-error').innerHTML = "";
+  } else {
+    if (brackets > 0) {
+      e('parse-error').innerHTML = brackets + " brackets open [";
+    } else {
+      e('parse-error').innerHTML = Math.abs(brackets) + " too many closed brackets ]";
+    }
+  }
 }
 
 function validatePhrase(p) {

@@ -76,3 +76,10 @@ textarea {
   color: #BBB;
   font-size: 0.8em;
 }
+
+#parse-error {
+  color: #666;
+  height: 0.7em;
+  font-size: 0.7em;
+  display: block;
+}
