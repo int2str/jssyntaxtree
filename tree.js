@@ -52,7 +52,7 @@ export default class Tree {
 
       // Draw line (or triangle) to parent
       let p = this.nodes[node.p];
-      if (this.triangles && node.value.indexOf(' ') != -1) {
+      if (this.triangles && node.leaf && node.value.indexOf(' ') != -1) {
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
             node.offset + PADDING, node.level * this.fontsize * 3 - 5);
@@ -98,7 +98,7 @@ export default class Tree {
   }
 
   parseString(s) {
-    const State = {IDLE: 0, LABEL: 1, VALUE: 2, APPENDING: 3, SUBSCRIPT: 4};
+    const State = {IDLE: 0, LABEL: 1, VALUE: 2, APPENDING: 3, SUBSCRIPT: 4, QUOTES: 5};
 
     let state = State.IDLE;
     let idx = 0;
@@ -122,8 +122,16 @@ export default class Tree {
           state = State.SUBSCRIPT;
           break;
 
+        case '"':
+          if (state == State.LABEL) {
+            state = State.QUOTES;
+          } else if (state == State.QUOTES) {
+            state = State.LABEL;
+          }
+          break;
+
         case ' ':
-          if (state != State.APPENDING) {
+          if (state != State.APPENDING && state != State.QUOTES) {
             state = State.APPENDING;
             this.nodes.push(new Node(back(parents), parents.length));
             ++idx;
