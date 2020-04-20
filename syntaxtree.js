@@ -56,6 +56,11 @@ function registerCallbacks() {
     parse();
   };
 
+  e('bottom').onchange = function() {
+    tree.setAlignBottom(e('bottom').checked);
+    parse();
+  }
+
   e('canvas').onclick = function() {
     tree.download();
   };

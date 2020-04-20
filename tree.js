@@ -10,6 +10,10 @@ function back(a) {
   return a.length === 0 ? -1 : a[a.length - 1];
 }
 
+function getLowestNode(nodes) {
+  return nodes.reduce((acc, n) => n.level > acc ? n.level : acc, 0);
+}
+
 export default class Tree {
   constructor() {
     this.nodes = [];
@@ -17,6 +21,7 @@ export default class Tree {
     this.fontsize = 16;
     this.triangles = true;
     this.subscript = true;
+    this.align_bottom = false;
     this.canvas = null;
   }
 
@@ -32,9 +37,10 @@ export default class Tree {
         this.canvas.setFillStyle('black');
       }
 
+      let l = node.leaf && this.align_bottom ? getLowestNode(this.nodes) : node.level;
       this.canvas.text(
           node.value, node.offset + node.width / 2,
-          node.level * this.fontsize * 3);
+          l * this.fontsize * 3);
 
       // Draw subscript (if any)
       if (node.subscript != '') {
@@ -44,7 +50,7 @@ export default class Tree {
         offset += this.canvas.textWidth(node.subscript) / 2;
         this.canvas.text(
             node.subscript, offset,
-            node.level * this.fontsize * 3 + this.fontsize / 2);
+            l * this.fontsize * 3 + this.fontsize / 2);
         this.canvas.setFontSize(this.fontsize);  // Reset font
       }
 
@@ -55,19 +61,19 @@ export default class Tree {
       if (this.triangles && node.leaf && node.value.indexOf(' ') != -1) {
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + PADDING, node.level * this.fontsize * 3 - 5);
+            node.offset + PADDING, l * this.fontsize * 3 - 5);
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
             node.offset + node.width - PADDING,
-            node.level * this.fontsize * 3 - 5);
+            l * this.fontsize * 3 - 5);
         this.canvas.line(
-            node.offset + PADDING, node.level * this.fontsize * 3 - 5,
+            node.offset + PADDING, l * this.fontsize * 3 - 5,
             node.offset + node.width - PADDING,
-            node.level * this.fontsize * 3 - 5);
+            l * this.fontsize * 3 - 5);
       } else {
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + node.width / 2, node.level * this.fontsize * 3 - 5);
+            node.offset + node.width / 2, l * this.fontsize * 3 - 5);
       }
     }
   }
@@ -95,6 +101,10 @@ export default class Tree {
 
   setSubscript(s) {
     this.subscript = s;
+  }
+
+  setAlignBottom(a) {
+    this.align_bottom = a;
   }
 
   parseString(s) {
