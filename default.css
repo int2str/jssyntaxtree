@@ -30,6 +30,7 @@ textarea, button, select {
 textarea {
   font-size: 1.25em;
   width: 99%;
+  padding: 3px;
 }
 
 #options {
