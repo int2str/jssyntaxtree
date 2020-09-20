@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
-"use strict";
+'use strict';
 
 const VERSION = 'v1.04';
 
@@ -58,12 +58,14 @@ function registerCallbacks() {
     parse();
   };
 
-  e('bottom').onchange = function() {
+  e('bottom').onchange =
+      function() {
     tree.setAlignBottom(e('bottom').checked);
     parse();
   }
 
-  e('canvas').onclick = function() {
+      e('canvas')
+          .onclick = function() {
     tree.download();
   };
 }

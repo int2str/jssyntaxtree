@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
-"use strict";
+'use strict';
 
 export default class Node {
   constructor(p, level) {

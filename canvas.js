@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
-"use strict";
+'use strict';
 
 export default class Canvas {
   constructor(c) {
@@ -59,7 +59,7 @@ export default class Canvas {
 
   download(fn) {
     const image = this.canvas.toDataURL('image/png')
-                    .replace('image/png', 'image/octet-stream');
+                      .replace('image/png', 'image/octet-stream');
     const link = document.createElement('a');
     link.setAttribute('href', image);
     link.setAttribute('download', fn);
