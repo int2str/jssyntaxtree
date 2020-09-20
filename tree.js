@@ -1,6 +1,8 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
+"use strict";
+
 const PADDING = 20;
 
 import Canvas from './canvas.js';

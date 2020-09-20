@@ -1,6 +1,8 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
+"use strict";
+
 const VERSION = 'v1.04';
 
 import Tree from './tree.js';

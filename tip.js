@@ -1,6 +1,8 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2019 Andre Eisenbach <andre@ironcreek.net>
 
+"use strict";
+
 const tips = [
   'Click on the syntax tree image to download a copy.',
   'Add manual subscripts to nodes using an underscore character.<br />Example: [N_s Dogs]',
