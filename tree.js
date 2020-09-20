@@ -6,15 +6,6 @@
 const PADDING = 20;
 
 import Canvas from './canvas.js';
-import Node from './node.js';
-
-function back(a) {
-  return a.length === 0 ? -1 : a[a.length - 1];
-}
-
-function getLowestNode(nodes) {
-  return nodes.reduce((acc, n) => n.level > acc ? n.level : acc, 0);
-}
 
 export default class Tree {
   constructor() {
@@ -263,4 +254,25 @@ export default class Tree {
   download() {
     this.canvas.download('syntax_tree.png');
   }
+}
+
+class Node {
+  constructor(p, level) {
+    this.p = p;
+    this.level = level;
+    this.value = '';
+    this.leaf = true;
+    this.width = 0;
+    this.offset = 0;
+    this.child_width = 0;
+    this.subscript = '';
+  }
+}
+
+function back(a) {
+  return a.length === 0 ? -1 : a[a.length - 1];
+}
+
+function getLowestNode(nodes) {
+  return nodes.reduce((acc, n) => n.level > acc ? n.level : acc, 0);
 }
