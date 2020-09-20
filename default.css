@@ -42,6 +42,11 @@ footer {
   clear: both;
 }
 
+footer a {
+  color: #00B;
+  text-decoration: none;
+}
+
 input[type="checkbox"] {
   vertical-align: auto;
 }
@@ -74,11 +79,6 @@ label {
   color: #555;
   text-align: center;
   font-style: italic;
-}
-
-#footer a {
-  color: #00B;
-  text-decoration: none;
 }
 
 #version {
