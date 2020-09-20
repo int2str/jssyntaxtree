@@ -33,6 +33,14 @@ textarea {
   padding: 3px;
 }
 
+footer {
+  text-align: center;
+  font-size: smaller;
+  margin-top: 40px;
+  color: #777;
+  clear: both;
+}
+
 #options {
   background-color: #eee;
   padding: 5px 10px;
@@ -55,14 +63,6 @@ textarea {
   color: #555;
   text-align: center;
   font-style: italic;
-}
-
-#footer {
-  text-align: center;
-  font-size: smaller;
-  margin-top: 40px;
-  color: #777;
-  clear: both;
 }
 
 #footer a {
