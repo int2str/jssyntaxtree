@@ -3,7 +3,7 @@
 
 'use strict';
 
-const VERSION = 'v1.04';
+const VERSION = 'v1.05';
 
 import Tree from './tree.js';
 import rotateTip from './tip.js';
