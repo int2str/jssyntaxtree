@@ -39,10 +39,10 @@ export default class Tree {
         this.canvas.setFillStyle('black');
       }
 
-      const l = node.leaf && this.align_bottom ? getLowestNode(this.nodes) :
-                                                 node.level;
+      const level = node.leaf && this.align_bottom ? getLowestNode(this.nodes) :
+                                                     node.level;
       this.canvas.text(
-          node.value, node.offset + node.width / 2, l * this.fontsize * 3);
+          node.value, node.offset + node.width / 2, level * this.fontsize * 3);
 
       // Draw subscript (if any)
       if (node.subscript != '') {
@@ -51,7 +51,8 @@ export default class Tree {
         this.canvas.setFontSize(this.fontsize * 3 / 4);
         offset += this.canvas.textWidth(node.subscript) / 2;
         this.canvas.text(
-            node.subscript, offset, l * this.fontsize * 3 + this.fontsize / 2);
+            node.subscript, offset,
+            level * this.fontsize * 3 + this.fontsize / 2);
         this.canvas.setFontSize(this.fontsize);  // Reset font
       }
 
@@ -62,17 +63,17 @@ export default class Tree {
       if (this.triangles && node.leaf && node.value.indexOf(' ') != -1) {
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + PADDING, l * this.fontsize * 3 - 5);
+            node.offset + PADDING, level * this.fontsize * 3 - 5);
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + node.width - PADDING, l * this.fontsize * 3 - 5);
+            node.offset + node.width - PADDING, level * this.fontsize * 3 - 5);
         this.canvas.line(
-            node.offset + PADDING, l * this.fontsize * 3 - 5,
-            node.offset + node.width - PADDING, l * this.fontsize * 3 - 5);
+            node.offset + PADDING, level * this.fontsize * 3 - 5,
+            node.offset + node.width - PADDING, level * this.fontsize * 3 - 5);
       } else {
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + node.width / 2, l * this.fontsize * 3 - 5);
+            node.offset + node.width / 2, level * this.fontsize * 3 - 5);
       }
     }
   }
