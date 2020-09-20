@@ -8,7 +8,7 @@ const VERSION = 'v1.04';
 import Tree from './tree.js';
 import rotateTip from './tip.js';
 
-let tree = new Tree();
+const tree = new Tree();
 
 window.onload = function() {
   e('version').innerHTML = VERSION;
@@ -85,7 +85,7 @@ function validatePhrase(p) {
   if (p.length < 3) return 'Phrase too short';
   if (p[0] != '[' || p[p.length - 1] != ']')
     return 'Phrase must start with [ and end with ]';
-  let brackets = bracketsOpen(p);
+  const brackets = bracketsOpen(p);
   if (brackets > 0) return brackets + ' bracket(s) open [';
   if (brackets < 0) return Math.abs(brackets) + ' too many closed bracket(s) ]';
   return null;
@@ -93,7 +93,7 @@ function validatePhrase(p) {
 
 function bracketsOpen(p) {
   let o = 0;
-  for (let c of p) {
+  for (const c of p) {
     if (c === '[') ++o;
     if (c === ']') --o;
   }

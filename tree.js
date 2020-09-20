@@ -31,7 +31,7 @@ export default class Tree {
     this.canvas.clear();
     this.canvas.translate(0, this.fontsize / 2);
 
-    for (let node of this.nodes) {
+    for (const node of this.nodes) {
       // Draw node label in the appropriate color
       if (this.nodecolor) {
         this.canvas.setFillStyle(node.leaf ? '#CC0000' : '#0000CC');
@@ -39,7 +39,7 @@ export default class Tree {
         this.canvas.setFillStyle('black');
       }
 
-      let l = node.leaf && this.align_bottom ? getLowestNode(this.nodes) : node.level;
+      const l = node.leaf && this.align_bottom ? getLowestNode(this.nodes) : node.level;
       this.canvas.text(
           node.value, node.offset + node.width / 2,
           l * this.fontsize * 3);
@@ -59,7 +59,7 @@ export default class Tree {
       if (node.p === -1) continue;
 
       // Draw line (or triangle) to parent
-      let p = this.nodes[node.p];
+      const p = this.nodes[node.p];
       if (this.triangles && node.leaf && node.value.indexOf(' ') != -1) {
         this.canvas.line(
             p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
@@ -167,10 +167,10 @@ export default class Tree {
   }
 
   calculateSubscript() {
-    let map = new Map();
+    const map = new Map();
 
     // Count all labels
-    for (let node of this.nodes) {
+    for (const node of this.nodes) {
       if (node.leaf || node.subscript != '') continue;
       map.set(node.value, map.get(node.value) + 1 || 1);
     }
@@ -194,7 +194,7 @@ export default class Tree {
     this.canvas.setFontSize(this.fontsize);
 
     // Reset child width and calculate text width
-    for (let node of this.nodes) {
+    for (const node of this.nodes) {
       node.width = this.canvas.textWidth(node.value) +
           this.canvas.textWidth(node.subscript) * 3 / 4 + PADDING;
       node.child_width = 0;
@@ -215,16 +215,16 @@ export default class Tree {
     // Fix node sizing if parent node is bigger than sum
     // of children (iterates backwards)
     for (let i = this.nodes.length - 1; i != -1; --i) {
-      let node = this.nodes[i];
+      const node = this.nodes[i];
       if (node.leaf || node.width <= node.child_width) continue;
-      for (let child of this.getChildren(i)) {
+      for (const child of this.getChildren(i)) {
         this.nodes[child].width *= (node.width / node.child_width);
       }
     }
 
     // Calculate offsets
     let level_offset = [];
-    for (let node of this.nodes) {
+    for (const node of this.nodes) {
       if (level_offset.length < (node.level + 1)) level_offset.push(0);
       if (node.p != -1) {
         node.offset =
@@ -245,9 +245,9 @@ export default class Tree {
   }
 
   resizeCanvas() {
-    let max_width = this.nodes.reduce(
+    const max_width = this.nodes.reduce(
         (acc, node) => (node.level === 0 ? acc + node.width : acc), 0);
-    let max_level =
+    const max_level =
         this.nodes.reduce((acc, node) => Math.max(acc, node.level), 0);
     this.canvas.resize(
         max_width, (max_level + 1) * this.fontsize * 3 - this.fontsize);
