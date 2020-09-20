@@ -10,7 +10,7 @@ import rotateTip from './tip.js';
 
 const tree = new Tree();
 
-window.onload = function() {
+window.onload = () => {
   e('version').innerHTML = VERSION;
   tree.setCanvas(e('canvas'));
   registerCallbacks();
@@ -33,46 +33,43 @@ function e(id) {
 function registerCallbacks() {
   e('code').oninput = parse;
 
-  e('font').onchange = function() {
+  e('font').onchange = () => {
     tree.setFont(e('font').value);
     parse();
   };
 
-  e('fontsize').onchange = function() {
+  e('fontsize').onchange = () => {
     tree.setFontsize(e('fontsize').value);
     parse();
   };
 
-  e('triangles').onchange = function() {
+  e('triangles').onchange = () => {
     tree.setTriangles(e('triangles').checked);
     parse();
   };
 
-  e('nodecolor').onchange = function() {
+  e('nodecolor').onchange = () => {
     tree.setColor(e('nodecolor').checked);
     parse();
   };
 
-  e('autosub').onchange = function() {
+  e('autosub').onchange = () => {
     tree.setSubscript(e('autosub').checked);
     parse();
   };
 
-  e('bottom').onchange = function() {
+  e('bottom').onchange = () => {
     tree.setAlignBottom(e('bottom').checked);
     parse();
-  }
-
-  e('canvas').onclick = function() {
-    tree.download();
   };
+
+  e('canvas').onclick = () => tree.download();
 }
 
 function parse() {
-  let phrase = e('code').value.replace(
-      /\s+/g, ' ');  // Replace all whitespace with spaces
-  phrase = phrase.replace(/ *([\[\]]) */g, '$1');  // Remove duplicate spaces
-  let validation_error = validatePhrase(phrase);
+  const phrase =
+      e('code').value.replace(/\s+/g, ' ').replace(/ *([\[\]]) */g, '$1');
+  const validation_error = validatePhrase(phrase);
   if (validation_error == null) {
     tree.parse(phrase);
     e('parse-error').innerHTML = '';
