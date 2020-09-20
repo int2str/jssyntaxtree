@@ -50,7 +50,7 @@ export default class Canvas {
   }
 
   line(x1, y1, x2, y2) {
-    let ctx = this.context;
+    const ctx = this.context;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
@@ -58,11 +58,12 @@ export default class Canvas {
   }
 
   download(fn) {
-    let image = this.canvas.toDataURL('image/png')
+    const image = this.canvas.toDataURL('image/png')
                     .replace('image/png', 'image/octet-stream');
-    let link = document.getElementById('link');
+    const link = document.createElement('a');
     link.setAttribute('href', image);
     link.setAttribute('download', fn);
     link.click();
+    link.remove();
   }
 }
