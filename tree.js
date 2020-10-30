@@ -99,8 +99,15 @@ export default class Tree {
   }
 
   parseString(s) {
-    const State =
-        {IDLE: 0, LABEL: 1, VALUE: 2, APPENDING: 3, SUBSCRIPT: 4, QUOTES: 5};
+    const State = {
+      IDLE: 0,
+      LABEL: 1,
+      VALUE: 2,
+      APPENDING: 3,
+      SUBSCRIPT: 4,
+      QUOTES: 5,
+      SUB_QUOTES: 6
+    };
 
     let state = State.IDLE;
     let idx = 0;
@@ -125,7 +132,11 @@ export default class Tree {
           break;
 
         case '"':
-          if (state == State.LABEL) {
+          if (state == State.SUBSCRIPT) {
+            state = State.SUB_QUOTES;
+          } else if (state == State.SUB_QUOTES) {
+            state = State.LABEL;
+          } else if (state == State.LABEL) {
             state = State.QUOTES;
           } else if (state == State.QUOTES) {
             state = State.LABEL;
@@ -133,7 +144,8 @@ export default class Tree {
           break;
 
         case ' ':
-          if (state != State.APPENDING && state != State.QUOTES) {
+          if (state != State.APPENDING && state != State.QUOTES &&
+              state != State.SUB_QUOTES) {
             state = State.APPENDING;
             this.nodes.push(new Node(back(parents), parents.length));
             ++idx;
@@ -146,7 +158,7 @@ export default class Tree {
             this.nodes.push(new Node(back(parents), parents.length));
             ++idx;
           }
-          if (state === State.SUBSCRIPT) {
+          if (state === State.SUBSCRIPT || state === State.SUB_QUOTES) {
             back(this.nodes).subscript += c;
           } else {
             back(this.nodes).value += c;
