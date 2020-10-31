@@ -260,7 +260,6 @@ export default class Tree {
     for (let i = this.nodes.length - 1; i != -1; --i) {
       const node = this.nodes[i];
       if (node.leaf || (node.width - node.child_width) < 3) continue;
-      console.log(node.value + ' ' + node.child_width + ' -> ' + node.width);
       for (const child of this.getChildren(i)) {
         this.nodes[child].width *= (node.width / node.child_width);
         change_made = true;
