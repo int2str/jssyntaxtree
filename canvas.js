@@ -57,6 +57,16 @@ export default class Canvas {
     ctx.stroke();
   }
 
+  triangle(x1, y1, x2, y2, x3, y3) {
+    const ctx = this.context;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.lineTo(x3, y3);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+  }
+
   download(fn) {
     const image = this.canvas.toDataURL('image/png')
                       .replace('image/png', 'image/octet-stream');
