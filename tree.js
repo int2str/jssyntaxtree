@@ -33,7 +33,7 @@ export default class Tree {
       const level = node.leaf && this.align_bottom ? getLowestNode(this.nodes) :
                                                      node.level;
       this.canvas.text(
-          node.value, node.offset + node.width / 2, level * this.fontsize * 3);
+          node.value, node.offset + node.width / 2, this.getNodeTop(level));
 
       // Draw subscript (if any)
       if (node.subscript != '') {
@@ -42,8 +42,7 @@ export default class Tree {
         this.canvas.setFontSize(this.fontsize * 3 / 4);
         offset += this.canvas.textWidth(node.subscript) / 2;
         this.canvas.text(
-            node.subscript, offset,
-            level * this.fontsize * 3 + this.fontsize / 2);
+            node.subscript, offset, this.getNodeTop(level) + this.fontsize / 2);
         this.canvas.setFontSize(this.fontsize);  // Reset font
       }
 
@@ -51,20 +50,24 @@ export default class Tree {
 
       // Draw line (or triangle) to parent
       const p = this.nodes[node.p];
+      const text_width = this.canvas.textWidth(node.value);
+      const node_center = (node.offset + node.width / 2);
+      const parent_center = p.offset + p.width / 2;
+
       if (this.triangles && node.leaf && node.value.indexOf(' ') != -1) {
         this.canvas.line(
-            p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + PADDING, level * this.fontsize * 3 - 5);
+            parent_center, this.getNodeTop(p.level) + this.fontsize,
+            node_center + text_width / 2, this.getNodeTop(level) - 5);
         this.canvas.line(
-            p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + node.width - PADDING, level * this.fontsize * 3 - 5);
+            parent_center, this.getNodeTop(p.level) + this.fontsize,
+            node_center - text_width / 2, this.getNodeTop(level) - 5);
         this.canvas.line(
-            node.offset + PADDING, level * this.fontsize * 3 - 5,
-            node.offset + node.width - PADDING, level * this.fontsize * 3 - 5);
+            node_center - text_width / 2, this.getNodeTop(level) - 5,
+            node_center + text_width / 2, this.getNodeTop(level) - 5);
       } else {
         this.canvas.line(
-            p.offset + p.width / 2, p.level * this.fontsize * 3 + this.fontsize,
-            node.offset + node.width / 2, level * this.fontsize * 3 - 5);
+            parent_center, this.getNodeTop(p.level) + this.fontsize,
+            node_center, this.getNodeTop(level) - 5);
       }
     }
   }
@@ -193,49 +196,13 @@ export default class Tree {
   }
 
   calculateWidth() {
-    this.canvas.setFontSize(this.fontsize);
-
-    // Reset child width and calculate text width
-    for (const node of this.nodes) {
-      node.width = this.canvas.textWidth(node.value) +
-          this.canvas.textWidth(node.subscript) * 3 / 4 + PADDING;
-      node.child_width = 0;
-    }
-
-    // Calculate child width (iterates backwards)
-    for (let j = this.nodes.length - 1; j != -1; --j) {
-      if (this.nodes[j].child_width > this.nodes[j].width) {
-        this.nodes[j].width = this.nodes[j].child_width;
-      }
-
-      if (this.nodes[j].p != -1) {
-        this.nodes[this.nodes[j].p].child_width += this.nodes[j].width;
-        this.nodes[this.nodes[j].p].leaf = false;
-      }
-    }
-
-    // Fix node sizing if parent node is bigger than sum
-    // of children (iterates backwards)
-    for (let i = this.nodes.length - 1; i != -1; --i) {
-      const node = this.nodes[i];
-      if (node.leaf || node.width <= node.child_width) continue;
-      for (const child of this.getChildren(i)) {
-        this.nodes[child].width *= (node.width / node.child_width);
-      }
-    }
-
-    // Calculate offsets
-    let level_offset = [];
-    for (const node of this.nodes) {
-      if (level_offset.length < (node.level + 1)) level_offset.push(0);
-      if (node.p != -1) {
-        node.offset =
-            Math.max(level_offset[node.level], this.nodes[node.p].offset);
-      } else {
-        node.offset = level_offset[node.level];
-      }
-      level_offset[node.level] = node.offset + node.width;
-    }
+    this.resetNodeWidthToTextSize();
+    let change_made = false;
+    this.calculateChildWidth();
+    do {
+      change_made = this.adjustChildNodeSizing();
+    } while (change_made);
+    this.calculateNodeOffsets()
   }
 
   getChildren(p) {
@@ -253,6 +220,68 @@ export default class Tree {
         this.nodes.reduce((acc, node) => Math.max(acc, node.level), 0);
     this.canvas.resize(
         max_width, (max_level + 1) * this.fontsize * 3 - this.fontsize);
+  }
+
+  getNodeTop(level) {
+    return this.fontsize * 3 * level;
+  }
+
+  resetNodeWidthToTextSize() {
+    for (const node of this.nodes) {
+      this.canvas.setFontSize(this.fontsize);
+      node.width = this.canvas.textWidth(node.value);
+
+      this.canvas.setFontSize(this.fontsize * 3 / 4);
+      node.width += this.canvas.textWidth(node.subscript) * 2;
+      node.width += PADDING;
+
+      node.child_width = 0;
+    }
+    this.canvas.setFontSize(this.fontsize);
+  }
+
+  calculateChildWidth() {
+    for (let j = this.nodes.length - 1; j != -1; --j) {
+      if (this.nodes[j].child_width > this.nodes[j].width) {
+        this.nodes[j].width = this.nodes[j].child_width;
+      }
+
+      if (this.nodes[j].p != -1) {
+        this.nodes[this.nodes[j].p].child_width += this.nodes[j].width;
+        this.nodes[this.nodes[j].p].leaf = false;
+      }
+    }
+  }
+
+  adjustChildNodeSizing() {
+    let change_made = false;
+    // Fix node sizing if parent node is bigger than sum
+    // of children (iterates backwards)
+    for (let i = this.nodes.length - 1; i != -1; --i) {
+      const node = this.nodes[i];
+      if (node.leaf || (node.width - node.child_width) < 3) continue;
+      console.log(node.value + ' ' + node.child_width + ' -> ' + node.width);
+      for (const child of this.getChildren(i)) {
+        this.nodes[child].width *= (node.width / node.child_width);
+        change_made = true;
+      }
+      this.nodes[i].child_width *= (node.width / node.child_width);
+    }
+    return change_made;
+  }
+
+  calculateNodeOffsets() {
+    let level_offset = [];
+    for (const node of this.nodes) {
+      if (level_offset.length < (node.level + 1)) level_offset.push(0);
+      if (node.p != -1) {
+        node.offset =
+            Math.max(level_offset[node.level], this.nodes[node.p].offset);
+      } else {
+        node.offset = level_offset[node.level];
+      }
+      level_offset[node.level] = node.offset + node.width;
+    }
   }
 
   parse(s) {
