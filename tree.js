@@ -114,7 +114,11 @@ export default class Tree {
     this.canvas.setStrokeStyle(arrow_color);
     this.canvas.setLineWidth(2);
 
-    const bottom = Math.max(from.y, to.y) + (this.fontsize * 4);
+    const bottom = 1.4 *
+        findMaxDepthBetwen(
+                       root, Math.min(drawable.left, target.left),
+                       Math.max(drawable.left, target.left));
+
     this.canvas.curve(from.x, from.y, to.x, to.y, from.x, bottom, to.x, bottom);
 
     if (drawable.arrow.ends.to) this.drawArrowHead(to.x, to.y);
@@ -315,4 +319,17 @@ function mapMerge(one, two) {
 
 function getDrawableCenter(drawable) {
   return drawable.left + drawable.width / 2;
+}
+
+function findMaxDepthBetwen(drawable, left, right, max_y = 0) {
+  drawable.children.forEach(child => {
+    const child_low = findMaxDepthBetwen(child, left, right, max_y);
+    max_y = Math.max(child_low, max_y);
+  });
+
+  if (drawable.is_leaf && drawable.left >= left && drawable.left <= right) {
+    max_y = Math.max(drawable.top, max_y);
+  }
+
+  return max_y;
 }
