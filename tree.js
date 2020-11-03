@@ -114,9 +114,8 @@ export default class Tree {
     this.canvas.setStrokeStyle(arrow_color);
     this.canvas.setLineWidth(2);
 
-    this.canvas.curve(
-        from.x, from.y, to.x, to.y, from.x, from.y + (this.fontsize * 4), to.x,
-        to.y + (this.fontsize * 4));
+    const bottom = Math.max(from.y, to.y) + (this.fontsize * 4);
+    this.canvas.curve(from.x, from.y, to.x, to.y, from.x, bottom, to.x, bottom);
 
     if (drawable.arrow.ends.to) this.drawArrowHead(to.x, to.y);
     if (drawable.arrow.ends.from) this.drawArrowHead(from.x, from.y);
