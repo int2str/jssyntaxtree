@@ -8,6 +8,9 @@ const VERSION = 'v1.06';
 import Tree from './tree.js';
 import rotateTip from './tip.js';
 
+import * as Parser from './parser.js';
+import * as Tokenizer from './tokenizer.js';
+
 const tree = new Tree();
 
 window.onload = () => {
@@ -16,11 +19,9 @@ window.onload = () => {
   registerCallbacks();
 
   const query = decodeURI(window.location.search).replace('?', '');
-  if (validatePhrase(query) == null) {
-    e('code').value = query;
-  }
+  if (query != null && query.length > 2) e('code').value = query;
 
-  parse();
+  update();
 
   rotateTip();
   setInterval(rotateTip, 30 * 1000);
@@ -31,68 +32,72 @@ function e(id) {
 }
 
 function registerCallbacks() {
-  e('code').oninput = parse;
+  e('code').oninput = update;
 
   e('font').onchange = () => {
     tree.setFont(e('font').value);
-    parse();
+    update();
   };
 
   e('fontsize').onchange = () => {
     tree.setFontsize(e('fontsize').value);
-    parse();
+    update();
   };
 
   e('triangles').onchange = () => {
     tree.setTriangles(e('triangles').checked);
-    parse();
+    update();
   };
 
   e('nodecolor').onchange = () => {
     tree.setColor(e('nodecolor').checked);
-    parse();
+    update();
   };
 
   e('autosub').onchange = () => {
     tree.setSubscript(e('autosub').checked);
-    parse();
+    update();
   };
 
   e('bottom').onchange = () => {
     tree.setAlignBottom(e('bottom').checked);
-    parse();
+    update();
   };
 
   e('canvas').onclick = () => tree.download();
 }
 
-function parse() {
-  const phrase =
-      e('code').value.replace(/\s+/g, ' ').replace(/ *([\[\]]) */g, '$1');
-  const validation_error = validatePhrase(phrase);
-  if (validation_error == null) {
-    tree.parse(phrase);
-    e('parse-error').innerHTML = '';
-  } else {
-    e('parse-error').innerHTML = validation_error;
+function update() {
+  const phrase = e('code').value;
+  e('parse-error').innerHTML = '';
+
+  try {
+    const tokens = Tokenizer.tokenize(phrase);
+    validateTokens(tokens);
+
+    const syntax_tree = Parser.parse(tokens);
+    tree.draw(syntax_tree);
+  } catch (err) {
+    e('parse-error').innerHTML = err;
   }
 }
 
-function validatePhrase(p) {
-  if (p.length < 3) return 'Phrase too short';
-  if (p[0] != '[' || p[p.length - 1] != ']')
-    return 'Phrase must start with [ and end with ]';
-  const brackets = bracketsOpen(p);
-  if (brackets > 0) return brackets + ' bracket(s) open [';
-  if (brackets < 0) return Math.abs(brackets) + ' too many closed bracket(s) ]';
+function validateTokens(tokens) {
+  if (tokens.length < 3) throw 'Phrase too short';
+  if (tokens[0].type != Tokenizer.TokenType.BRACKET_OPEN ||
+      tokens[tokens.length - 1].type != Tokenizer.TokenType.BRACKET_CLOSE)
+    throw 'Phrase must start with [ and end with ]';
+  const brackets = countOpenBrackets(tokens);
+  if (brackets > 0) throw brackets + ' bracket(s) open [';
+  if (brackets < 0) throw Math.abs(brackets) + ' too many closed bracket(s) ]';
   return null;
 }
 
-function bracketsOpen(p) {
+function countOpenBrackets(tokens) {
   let o = 0;
-  for (const c of p) {
-    if (c === '[') ++o;
-    if (c === ']') --o;
+  for (const token of tokens) {
+    if (token.type == Tokenizer.TokenType.BRACKET_OPEN) ++o;
+    if (token.type == Tokenizer.TokenType.BRACKET_CLOSE) --o;
   }
   return o;
 }
