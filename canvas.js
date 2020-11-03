@@ -14,6 +14,7 @@ export default class Canvas {
   resize(w, h) {
     this.canvas.width = w;
     this.canvas.height = h;
+    this.clear();
   }
 
   textWidth(t) {
@@ -49,6 +50,14 @@ export default class Canvas {
     this.context.fillStyle = s;
   }
 
+  setStrokeStyle(s) {
+    this.context.strokeStyle = s;
+  }
+
+  setLineWidth(w) {
+    this.context.lineWidth = w;
+  }
+
   line(x1, y1, x2, y2) {
     const ctx = this.context;
     ctx.beginPath();
@@ -57,13 +66,29 @@ export default class Canvas {
     ctx.stroke();
   }
 
-  triangle(x1, y1, x2, y2, x3, y3) {
+  triangle(x1, y1, x2, y2, x3, y3, fill = false) {
     const ctx = this.context;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.lineTo(x3, y3);
     ctx.lineTo(x1, y1);
+    if (fill) ctx.fill();
+    ctx.stroke();
+  }
+
+  rect(x, y, w, h) {
+    const ctx = this.context;
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.stroke();
+  }
+
+  curve(x1, y1, x2, y2, cx1, cy1, cx2, cy2) {
+    const ctx = this.context;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.bezierCurveTo(cx1, cy1, cx2, cy2, x2, y2);
     ctx.stroke();
   }
 
