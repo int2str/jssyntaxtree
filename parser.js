@@ -70,6 +70,17 @@ function parseValue(tokens, current) {
     label = tokens[current++].value;
   }
 
+  // Check for subscript
+  let subscript = null;
+  if (current < tokens.length - 1 &&
+      tokens[current].type == Tokenizer.TokenType.SUBSCRIPT_PREFIX) {
+    const subscript_token = tokens[++current];
+    if (subscript_token.type != Tokenizer.TokenType.STRING &&
+        subscript_token.type != Tokenizer.TokenType.QUOTED_STRING)
+      throw current + ': Expected subscript string after _';
+    subscript = tokens[current++].value;
+  }
+
   // Check for arrow
   let arrow = null;
   if (current < tokens.length - 1 &&
@@ -90,7 +101,10 @@ function parseValue(tokens, current) {
     arrow = {ends: ends, target: tokens[current++].value};
   }
 
-  return [current, {type: NodeType.VALUE, label: label, arrow: arrow}];
+  return [
+    current,
+    {type: NodeType.VALUE, label: label, subscript: subscript, arrow: arrow}
+  ];
 }
 
 function parseToken(tokens, current) {

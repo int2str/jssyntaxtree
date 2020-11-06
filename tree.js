@@ -168,7 +168,7 @@ export default class Tree {
 function drawableFromNode(canvas, node, depth = -1) {
   const drawable = {
     label: node.label,
-    subscript: node.type == Parser.NodeType.NODE ? node.subscript : null,
+    subscript: node.subscript,
     width: getNodeWidth(canvas, node),
     depth: depth,
     is_leaf: node.type == Parser.NodeType.VALUE,
