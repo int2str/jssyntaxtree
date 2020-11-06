@@ -63,8 +63,8 @@ export default class Tree {
 
   drawSubscript(drawable) {
     if (drawable.subscript == null || drawable.subscript == '') return;
-    let offset =
-        getDrawableCenter(drawable) + this.canvas.textWidth(drawable.label) / 2;
+    let offset = 1 + getDrawableCenter(drawable) +
+        this.canvas.textWidth(drawable.label) / 2;
     this.canvas.setFontSize(this.fontsize * 3 / 4);
     offset += this.canvas.textWidth(drawable.subscript) / 2;
     this.canvas.text(
