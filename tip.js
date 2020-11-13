@@ -12,7 +12,7 @@ const tips = [
       'Example: <a href="?[N_s%20Dogs]">[N_s Dogs]</a>',
   'You can add spaces to nodes by putting them inside double quotes.<br />' +
       'Example: <a href="?[&quot;Main%20clause&quot;%20[S][V][O]]">[&quot;Main clause&quot; [S][V][O]]</a>',
-  'Add arrows a node by using an -&gt;, &lt- or &gt;&lt; arrow followed by column number.<br />' +
+  'Add arrows to a node by using an -&gt;, &lt- or &lt;&gt; arrow followed by column number.<br />' +
       'Example: <a href="?[A%20[B%20C][D%20E][F%20G%20->1]]">[A [B C][D E][F G ->1]]</a>'
 ];
 
