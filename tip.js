@@ -7,7 +7,7 @@ const tips = [
   'Click on the syntax tree image to download a copy.',
   'jsSyntaxTree works offline, instantly updates and handles unicode fonts.',
   'You can right-click the image and copy &amp; paste the graph into your document editor.',
-  'The graph will updarte automatically once a matching number of brackets is detected.',
+  'The graph will update automatically once a matching number of brackets is detected.',
   'Add manual subscripts to nodes using an underscore character.<br />' +
       'Example: <a href="?[N_s%20Dogs]">[N_s Dogs]</a>',
   'You can add spaces to nodes by putting them inside double quotes.<br />' +
