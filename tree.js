@@ -31,13 +31,17 @@ export default class Tree {
     if (this.align_bottom) moveLeafsToBottom(drawables, max_depth);
     if (this.subscript) calculateAutoSubscript(drawables);
     const has_arrow = calculateDrawablePositions(this.canvas, drawables);
+    const arrowSet = makeArrowSet(drawables, this.fontsize);
+    const arrowScaler =
+        Math.pow((Math.sqrt(arrowSet.maxBottom) / arrowSet.maxBottom), 1 / 50);
 
     this.resizeCanvas(
         drawables.width + 1,
-        (max_depth + 1) * this.fontsize * 3 - this.fontsize +
-            (has_arrow ? this.fontsize * 3.1 : 0));
+        Math.max(
+            (max_depth + 1) * this.fontsize * 3,
+            has_arrow ? arrowSet.maxBottom * arrowScaler : 0));
     drawables.children.forEach(child => this.drawNode(child));
-    this.drawArrows(drawables);
+    this.drawArrows(arrowSet.arrows);
   }
 
   drawNode(drawable) {
@@ -86,43 +90,18 @@ export default class Tree {
     }
   }
 
-  drawArrows(root) {
-    this.drawArrow(root, root);
-  }
-
-  drawArrow(root, drawable) {
-    drawable.children.forEach(child => {
-      this.drawArrow(root, child);
-    });
-
-    if (!drawable.is_leaf || !drawable.arrow) return;
-
-    const target = findTarget(root, drawable.arrow.target);
-    if (!target) return;
-
-    const from = {
-      x: getDrawableCenter(drawable),
-      y: drawable.top + (this.fontsize * 1.2)
-    };
-    const to = {
-      x: getDrawableCenter(target),
-      y: target.top + (this.fontsize * 1.2)
-    };
-
+  drawArrows(arrows) {
     const arrow_color = this.nodecolor ? '#909' : '#999';
     this.canvas.setFillStyle(arrow_color);
     this.canvas.setStrokeStyle(arrow_color);
     this.canvas.setLineWidth(2);
-
-    const bottom = 1.4 *
-        findMaxDepthBetwen(
-                       root, Math.min(drawable.left, target.left),
-                       Math.max(drawable.left, target.left));
-
-    this.canvas.curve(from.x, from.y, to.x, to.y, from.x, bottom, to.x, bottom);
-
-    if (drawable.arrow.ends.to) this.drawArrowHead(to.x, to.y);
-    if (drawable.arrow.ends.from) this.drawArrowHead(from.x, from.y);
+    for (const arrow of arrows) {
+      this.canvas.curve(
+          arrow.from_x, arrow.from_y, arrow.to_x, arrow.to_y, arrow.from_x,
+          arrow.bottom, arrow.to_x, arrow.bottom);
+      if (arrow.ends_to) this.drawArrowHead(arrow.to_x, arrow.to_y);
+      if (arrow.ends_from) this.drawArrowHead(arrow.from_x, arrow.from_y);
+    }
   }
 
   drawArrowHead(x, y) {
@@ -162,6 +141,35 @@ export default class Tree {
 
   download() {
     this.canvas.download('syntax_tree.png');
+  }
+}
+
+class Arrow {
+  constructor(from_x, from_y, to_x, to_y, bottom, ends_to, ends_from) {
+    this.from_x = from_x;
+    this.from_y = from_y;
+    this.to_x = to_x;
+    this.to_y = to_y;
+    this.bottom = bottom;
+    this.ends_to = ends_to;
+    this.ends_from = ends_from;
+  }
+}
+
+class ArrowSet {
+  constructor() {
+    this.arrows = [];
+    this.maxBottom = 0;
+  }
+
+  add(arrow) {
+    this.arrows.push(arrow);
+    this.maxBottom = Math.max(this.maxBottom, arrow.bottom);
+  }
+
+  concatenate(arrowSet) {
+    this.arrows = this.arrows.concat(arrowSet.arrows);
+    this.maxBottom = Math.max(this.maxBottom, arrowSet.maxBottom);
   }
 }
 
@@ -321,9 +329,9 @@ function getDrawableCenter(drawable) {
   return drawable.left + drawable.width / 2;
 }
 
-function findMaxDepthBetwen(drawable, left, right, max_y = 0) {
+function findMaxDepthBetween(drawable, left, right, max_y = 0) {
   drawable.children.forEach(child => {
-    const child_low = findMaxDepthBetwen(child, left, right, max_y);
+    const child_low = findMaxDepthBetween(child, left, right, max_y);
     max_y = Math.max(child_low, max_y);
   });
 
@@ -332,4 +340,38 @@ function findMaxDepthBetwen(drawable, left, right, max_y = 0) {
   }
 
   return max_y;
+}
+
+function makeArrowSet(root, fontsize) {
+  return makeArrowSetOn(root, root, fontsize);
+}
+
+function makeArrowSetOn(root, drawable, fontsize) {
+  const arrowSet = new ArrowSet();
+  drawable.children.forEach(child => {
+    arrowSet.concatenate(makeArrowSetOn(root, child, fontsize));
+  });
+
+  if (!drawable.is_leaf || !drawable.arrow) return arrowSet;
+
+  const target = findTarget(root, drawable.arrow.target);
+  if (!target) return arrowSet;
+
+  const from = {
+    x: getDrawableCenter(drawable),
+    y: drawable.top + (fontsize * 1.2)
+  };
+  const to = {x: getDrawableCenter(target), y: target.top + (fontsize * 1.2)};
+
+  const bottom = 1.4 *
+      findMaxDepthBetween(
+                     root, Math.min(drawable.left, target.left),
+                     Math.max(drawable.left, target.left));
+
+  const ends_to = drawable.arrow.ends.to;
+  const ends_from = drawable.arrow.ends.from;
+
+  arrowSet.add(
+      new Arrow(from.x, from.y, to.x, to.y, bottom, ends_to, ends_from));
+  return arrowSet;
 }
