@@ -16,6 +16,7 @@ export default class Tree {
     this.subscript = true;
     this.align_bottom = false;
     this.canvas = null;
+    this.vscaler = 1;
   }
 
   resizeCanvas(w, h) {
@@ -30,7 +31,8 @@ export default class Tree {
     const max_depth = getMaxDepth(drawables);
     if (this.align_bottom) moveLeafsToBottom(drawables, max_depth);
     if (this.subscript) calculateAutoSubscript(drawables);
-    const has_arrow = calculateDrawablePositions(this.canvas, drawables);
+    const has_arrow =
+        calculateDrawablePositions(this.canvas, drawables, this.vscaler);
     const arrowSet = makeArrowSet(drawables, this.fontsize);
     const arrowScaler =
         Math.pow((Math.sqrt(arrowSet.maxBottom) / arrowSet.maxBottom), 1 / 50);
@@ -38,7 +40,7 @@ export default class Tree {
     this.resizeCanvas(
         drawables.width + 1,
         Math.max(
-            (max_depth + 1) * this.fontsize * 3,
+            (max_depth + 1) * (this.fontsize * this.vscaler * 3),
             has_arrow ? arrowSet.maxBottom * arrowScaler : 0));
     drawables.children.forEach(child => this.drawNode(child));
     this.drawArrows(arrowSet.arrows);
@@ -139,6 +141,10 @@ export default class Tree {
     this.align_bottom = a;
   }
 
+  setSpacing(s) {
+    this.vscaler = s;
+  }
+
   download() {
     this.canvas.download('syntax_tree.png');
   }
@@ -206,7 +212,8 @@ function getNodeWidth(canvas, node) {
   }
 }
 
-function calculateDrawablePositions(canvas, drawable, parent_offset = 0) {
+function calculateDrawablePositions(
+    canvas, drawable, vscaler, parent_offset = 0) {
   let offset = 0;
   let scale = 1;
   let hasArrow = drawable.arrow;
@@ -217,11 +224,12 @@ function calculateDrawablePositions(canvas, drawable, parent_offset = 0) {
   }
 
   drawable.children.forEach(child => {
-    child.top = child.depth * canvas.fontsize * 3 + NODE_PADDING / 2;
+    child.top =
+        child.depth * (canvas.fontsize * 3 * vscaler) + NODE_PADDING / 2;
     child.left = offset + parent_offset;
     child.width *= scale;
     const child_has_arrow =
-        calculateDrawablePositions(canvas, child, child.left);
+        calculateDrawablePositions(canvas, child, vscaler, child.left);
     if (child_has_arrow) hasArrow = true;
     offset += child.width;
   });

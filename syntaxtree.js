@@ -64,6 +64,11 @@ function registerCallbacks() {
     update();
   };
 
+  e('spacing').oninput = () => {
+    tree.setSpacing(parseFloat(e('spacing').value / 100));
+    update();
+  };
+
   e('canvas').onclick = () => tree.download();
 }
 
