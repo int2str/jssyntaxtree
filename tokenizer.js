@@ -10,6 +10,7 @@ export const TokenType = {
   NUMBER: 'NUMBER',
   QUOTED_STRING: 'QUOTED_STRING',
   SUBSCRIPT_PREFIX: 'SUBSCRIPT_PREFIX',
+  SUPERSCRIPT_PREFIX: 'SUPERSCRIPT_PREFIX',
   ARROW_TO: 'ARROW_TO',
   ARROW_FROM: 'ARROW_FROM',
   ARROW_BOTH: 'ARROW_BOTH'
@@ -54,7 +55,7 @@ function isWhitespace(ch) {
 }
 
 function isControlCharacter(ch) {
-  const control_chars = ['[', ']', '_', '"'];
+  const control_chars = ['[', ']', '^', '_', '"'];
   return control_chars.includes(ch);
 }
 
@@ -70,6 +71,7 @@ function skipWhitespace(input) {
 
 function parseControlCharacters(input) {
   if (input.charAt(0) == '_') return [new Token(TokenType.SUBSCRIPT_PREFIX), 1];
+  if (input.charAt(0) == '^') return [new Token(TokenType.SUPERSCRIPT_PREFIX), 1];
   if (input.charAt(0) == '[') return [new Token(TokenType.BRACKET_OPEN), 1];
   if (input.charAt(0) == ']') return [new Token(TokenType.BRACKET_CLOSE), 1];
   return [null, 0];

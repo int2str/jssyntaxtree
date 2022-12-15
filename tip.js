@@ -10,6 +10,8 @@ const tips = [
   'The graph will update automatically once a matching number of brackets is detected.',
   'Add manual subscripts to nodes using an underscore character.<br />' +
       'Example: <a href="?[N_s%20Dogs]">[N_s Dogs]</a>',
+  'Add manual superscript to nodes using the ^ character.<br />' +
+      'Example: <a href="?[N^s%20Cats]">[N^s Cats]</a>',
   'You can add spaces to nodes by putting them inside double quotes.<br />' +
       'Example: <a href="?[&quot;Main%20clause&quot;%20[S][V][O]]">[&quot;Main clause&quot; [S][V][O]]</a>',
   'Add arrows to a node by using an -&gt;, &lt- or &lt;&gt; arrow followed by column number.<br />' +

@@ -34,8 +34,11 @@
   <label for="autosub">Auto subscript</label>
   <input type="checkbox" id="triangles" checked="checked" />
   <label for="triangles">Triangles</label>
-  <input type="checkbox" id="bottom" />
-  <label for="bottom">Align at bottom</label>
+  <select id="align">
+    <option value="0">Top aligned</option>
+    <option value="1">Leaves aligned</option>
+    <option value="2">Bottom aligned</option>
+  </select>
   <input type="range" id="spacing" min="75" max="150" value="100" />
 </div>
 
@@ -50,7 +53,7 @@
 <div id="tip"></div>
 
 <footer>
-  &copy; 2003-2020 IronCreek Software<br />
+  &copy; 2003-2022 IronCreek Software<br />
   Idea and linguistic guidance - <b>Mei Eisenbach</b><br />
   Coding &amp; design - <b>Andr&eacute; Eisenbach</b><br />
   <a href="https://github.com/int2str/jssyntaxtree">https://github.com/int2str/jssyntaxtree</a>

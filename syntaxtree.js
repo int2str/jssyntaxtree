@@ -59,8 +59,8 @@ function registerCallbacks() {
     update();
   };
 
-  e('bottom').onchange = () => {
-    tree.setAlignBottom(e('bottom').checked);
+  e('align').onchange = () => {
+    tree.setAlignment(parseInt(e('align').value, 10));
     update();
   };
 

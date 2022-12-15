@@ -23,7 +23,7 @@ export function parse(tokens) {
 }
 
 function parseNode(tokens, current) {
-  const node = {type: NodeType.NODE, label: null, subscript: null, values: []};
+  const node = {type: NodeType.NODE, label: null, subscript: null, superscript: null, values: []};
 
   // Get label
   if (current > tokens.length - 2) throw 'Missing label after [';
@@ -35,12 +35,17 @@ function parseNode(tokens, current) {
 
   // Check for subscript
   if (current < tokens.length - 1 &&
-      tokens[current].type == Tokenizer.TokenType.SUBSCRIPT_PREFIX) {
+      (tokens[current].type == Tokenizer.TokenType.SUBSCRIPT_PREFIX ||
+      tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX)) {
+    let is_super = tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX;
     const subscript_token = tokens[++current];
     if (subscript_token.type != Tokenizer.TokenType.STRING &&
         subscript_token.type != Tokenizer.TokenType.QUOTED_STRING)
       throw current + ': Expected subscript string after _';
-    node.subscript = tokens[current++].value;
+    if (is_super)
+      node.superscript = tokens[current++].value;
+    else
+      node.subscript = tokens[current++].value;
   }
 
   // Parse children
@@ -70,15 +75,21 @@ function parseValue(tokens, current) {
     label = tokens[current++].value;
   }
 
-  // Check for subscript
+  // Check for sub/superscript
   let subscript = null;
+  let superscript = null;
   if (current < tokens.length - 1 &&
-      tokens[current].type == Tokenizer.TokenType.SUBSCRIPT_PREFIX) {
+      (tokens[current].type == Tokenizer.TokenType.SUBSCRIPT_PREFIX ||
+      tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX)) {
+    let is_super = tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX;
     const subscript_token = tokens[++current];
     if (subscript_token.type != Tokenizer.TokenType.STRING &&
         subscript_token.type != Tokenizer.TokenType.QUOTED_STRING)
-      throw current + ': Expected subscript string after _';
-    subscript = tokens[current++].value;
+      throw current + ': Expected subscript string after _/^';
+    if (is_super)
+      superscript = tokens[current++].value;
+    else
+      subscript = tokens[current++].value;
   }
 
   // Check for arrow
@@ -103,7 +114,7 @@ function parseValue(tokens, current) {
 
   return [
     current,
-    {type: NodeType.VALUE, label: label, subscript: subscript, arrow: arrow}
+    {type: NodeType.VALUE, label: label, subscript: subscript, superscript: superscript, arrow: arrow}
   ];
 }
 
