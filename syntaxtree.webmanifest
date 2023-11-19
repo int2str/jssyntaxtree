@@ -1,0 +1,16 @@
+{
+  "name": "jsSyntaxTree",
+  "name": "jsSyntaxTree",
+  "description": "Draw syntax trees using labelled bracket notation",
+  "icons": [
+    {
+      "src": "/syntaxtree_icon.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "theme_color": "#125475",
+  "background_color": "#fdfdfd"
+}

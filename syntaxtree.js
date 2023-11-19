@@ -14,6 +14,8 @@ import * as Tokenizer from './tokenizer.js';
 const tree = new Tree();
 
 window.onload = () => {
+  registerServiceWorker();
+
   e('version').innerHTML = VERSION;
   tree.setCanvas(e('canvas'));
   registerCallbacks();
@@ -29,6 +31,17 @@ window.onload = () => {
 
 function e(id) {
   return document.getElementById(id);
+}
+
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/syntaxtree_worker.js').then(
+      (registration) => { console.info('Service worker registered.'); },
+      (error) => { console.warn('Unable to register service worker.'); }
+    );
+  } else {
+    console.info('Service workers not supported.');
+  }
 }
 
 function registerCallbacks() {
