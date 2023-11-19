@@ -1,17 +1,17 @@
-const CACHE_VERSION = 3;
+const CACHE_VERSION = 5;
 const CACHE_NAME = `syntaxtree-cache-v${CACHE_VERSION}`;
 const CACHE_FILES = [
-  '/',
-  '/index.html',
-  '/default.css',
-  '/syntaxtree_icon.png',
-  '/syntaxtree.webmanifest',
-  '/canvas.js',
-  '/parser.js',
-  '/syntaxtree.js',
-  '/tip.js',
-  '/tokenizer.js',
-  '/tree.js',
+  '',
+  'index.html',
+  'default.css',
+  'syntaxtree_icon.png',
+  'syntaxtree.webmanifest',
+  'canvas.js',
+  'parser.js',
+  'syntaxtree.js',
+  'tip.js',
+  'tokenizer.js',
+  'tree.js',
 ];
 
 self.addEventListener('install', (event) => {

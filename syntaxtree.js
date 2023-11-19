@@ -35,7 +35,7 @@ function e(id) {
 
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/syntaxtree_worker.js').then(
+    navigator.serviceWorker.register('syntaxtree_worker.js').then(
       (registration) => { console.info('Service worker registered.'); },
       (error) => { console.warn('Unable to register service worker.'); }
     );
