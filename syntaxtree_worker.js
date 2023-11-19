@@ -1,18 +1,35 @@
-const CACHE_VERSION = 5;
+const CACHE_VERSION = 7;
 const CACHE_NAME = `syntaxtree-cache-v${CACHE_VERSION}`;
 const CACHE_FILES = [
-  '',
-  'index.html',
-  'default.css',
-  'syntaxtree_icon.png',
-  'syntaxtree.webmanifest',
-  'canvas.js',
-  'parser.js',
-  'syntaxtree.js',
-  'tip.js',
-  'tokenizer.js',
-  'tree.js',
+  '/syntaxtree/',
+  '/syntaxtree/index.html',
+  '/syntaxtree/default.css',
+  '/syntaxtree/syntaxtree_icon.png',
+  '/syntaxtree/syntaxtree.webmanifest',
+  '/syntaxtree/canvas.js',
+  '/syntaxtree/parser.js',
+  '/syntaxtree/syntaxtree.js',
+  '/syntaxtree/tip.js',
+  '/syntaxtree/tokenizer.js',
+  '/syntaxtree/tree.js',
 ];
+
+async function cacheStore(request, response) {
+  const cache = await caches.open(CACHE_NAME);
+  await cache.put(request, response);
+}
+
+async function cacheFirst(request) {
+  const cached_response = await caches.match(request);
+  if (cached_response) {
+    console.info(`[Service Worker] Returning cached ${request.url} ...`);
+    return cached_response;
+  }
+
+  const network_response = await fetch(request);
+  cacheStore(request, network_response.clone());
+  return network_response;
+}
 
 self.addEventListener('install', (event) => {
   console.info('[Service Worker] Install');
@@ -20,7 +37,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache
-        .addAll(CACHE_FILES.map((url) => new Request(url, {mode: 'no-cors'})))
+        .addAll(CACHE_FILES.map((url) => new Request(url, {cache: 'reload', mode: 'no-cors'})))
         .then(() => {
           console.info('[Service Worker] Resources pre-fetched.');
         })
@@ -43,18 +60,5 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   console.info(`[Service Worker] Fetching ${event.request.url} ...`);
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith((async() => {
-    const cache = await caches.open(CACHE_NAME);
-    const cached_response = await cache.match(event.request);
-
-    if (cached_response) {
-      // If cached, also attempt to update entry in the background
-      event.waitUntil(cache.add(event.request).catch(() => {}));
-      return cached_response;
-    }
-
-    return fetch(event.request);
-  })());
+  event.respondWith(cacheFirst(event.request));
 });
