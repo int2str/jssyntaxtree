@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="default.css" />
 <link rel="manifest" href="syntaxtree.webmanifest" />
 <script type="module" src="syntaxtree.js" async></script>
+<script type="module" src="highlight.js" defer></script>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name='viewport' content='width=device-width, initial-scale=1' />
 <meta name="author" content="Andre Eisenbach" />
@@ -45,7 +46,10 @@
 
 <div id="input">
   <h2>Phrase (labelled bracket notation)</h2>
-  <textarea rows="5" id="code">[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees ->1]]]</textarea>
+    <div class="wrapper">
+      <pre id="highlight"></pre>
+      <textarea rows="5" id="code">[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees ->1]]]</textarea>
+    </div>
   <span id="parse-error"></span>
 </div>
 
@@ -60,3 +64,4 @@
   <a href="https://github.com/int2str/jssyntaxtree">https://github.com/int2str/jssyntaxtree</a>
   <div id="version">&nbsp;</div>
 </footer>
+
