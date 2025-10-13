@@ -1,14 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <title>jsSyntaxTree</title>
 <link rel="stylesheet" type="text/css" href="default.css" />
 <link rel="manifest" href="syntaxtree.webmanifest" />
 <script type="module" src="syntaxtree.js" async></script>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name='viewport' content='width=device-width, initial-scale=1' />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="author" content="Andre Eisenbach" />
-<meta name="description"
-  content="jsSyntaxtree - a syntax tree generator for linguists. Draw syntax trees from labelled bracket notation phrases and include them into your assignment/homework." />
-<meta name="keywords" content="syntax tree, linguists, homework, labelled bracket notation" />
+<meta
+  name="description"
+  content="jsSyntaxtree - a syntax tree generator for linguists. Draw syntax trees from labelled bracket notation phrases and include them into your assignment/homework."
+/>
+<meta
+  name="keywords"
+  content="syntax tree, linguists, homework, labelled bracket notation"
+/>
 
 <h1>jsSyntaxTree</h1>
 
@@ -18,8 +23,8 @@
     <option value="serif">serif</option>
     <option value="monospace">monospace</option>
     <option value="cursive">cursive</option>
-    <option value="fantasy">fantasy</option>
-  </select>&nbsp;
+    <option value="fantasy">fantasy</option></select
+  >&nbsp;
   <select id="fontsize">
     <option value="12">12</option>
     <option value="14">14</option>
@@ -27,14 +32,16 @@
     <option value="18">18</option>
     <option value="20">20</option>
     <option value="24">24</option>
-    <option value="36">36</option>
-  </select>&nbsp;
+    <option value="36">36</option></select
+  >&nbsp;
   <input type="checkbox" id="nodecolor" checked="checked" />
   <label for="nodecolor">Color</label>
   <input type="checkbox" id="autosub" checked="checked" />
   <label for="autosub">Auto subscript</label>
   <input type="checkbox" id="triangles" checked="checked" />
   <label for="triangles">Triangles</label>
+  <input type="checkbox" id="highlighting" checked="checked" />
+  <label for="highlighting">Highlight</label>
   <select id="align">
     <option value="0">Top aligned</option>
     <option value="1">Leaves aligned</option>
@@ -45,7 +52,12 @@
 
 <div id="input">
   <h2>Phrase (labelled bracket notation)</h2>
-  <textarea rows="5" id="code">[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees ->1]]]</textarea>
+  <div id="editor">
+    <pre id="highlight"></pre>
+    <textarea rows="5" id="code">
+[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees ->1]]]</textarea
+    >
+  </div>
   <span id="parse-error"></span>
 </div>
 
@@ -54,9 +66,11 @@
 <div id="tip"></div>
 
 <footer>
-  &copy; 2003-2022 IronCreek Software<br />
+  &copy; 2003-2025 IronCreek Software<br />
   Idea and linguistic guidance - <b>Mei Eisenbach</b><br />
   Coding &amp; design - <b>Andr&eacute; Eisenbach</b><br />
-  <a href="https://github.com/int2str/jssyntaxtree">https://github.com/int2str/jssyntaxtree</a>
+  <a href="https://github.com/int2str/jssyntaxtree"
+    >https://github.com/int2str/jssyntaxtree</a
+  >
   <div id="version">&nbsp;</div>
 </footer>

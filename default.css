@@ -6,7 +6,7 @@
 body {
   color: black;
   background-color: #fdfdfd;
-  font-family: "Bitsream Vera Sans",Helvetica,Arial,sans-serif;
+  font-family: "Bitsream Vera Sans", Helvetica, Arial, sans-serif;
 }
 
 h1 {
@@ -23,15 +23,27 @@ h2 {
   color: #333;
 }
 
-textarea, button, select {
+textarea,
+button,
+select {
   border: 1px solid #ccc;
   background-color: white;
 }
 
 textarea {
-  font-size: 1.1rem;
   width: 99%;
+  z-index: 2;
+  resize: vertical;
+}
+
+textarea,
+#highlight {
+  font-family: monospace;
+  font-size: 1.1rem;
   padding: 3px;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 footer {
@@ -43,7 +55,7 @@ footer {
 }
 
 footer a {
-  color: #00B;
+  color: #00b;
   text-decoration: none;
 }
 
@@ -85,7 +97,7 @@ label {
   position: absolute;
   right: 2px;
   top: 2px;
-  color: #BBB;
+  color: #bbb;
   font-size: 0.8em;
 }
 
@@ -98,4 +110,27 @@ label {
 
 #canvas {
   cursor: pointer;
+}
+
+#editor {
+  position: relative;
+  width: 100%;
+  height: fit-content;
+}
+
+#highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: transparent;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+  border: 1px solid transparent;
+}
+
+mark {
+  background: rgba(255, 255, 0, 0.3);
 }
