@@ -18,36 +18,56 @@
 <h1>jsSyntaxTree</h1>
 
 <div id="options">
-  <select id="font">
-    <option value="sans-serif" selected="selected">sans-serif</option>
-    <option value="serif">serif</option>
-    <option value="monospace">monospace</option>
-    <option value="cursive">cursive</option>
-    <option value="fantasy">fantasy</option></select
-  >&nbsp;
-  <select id="fontsize">
-    <option value="12">12</option>
-    <option value="14">14</option>
-    <option value="16" selected="selected">16</option>
-    <option value="18">18</option>
-    <option value="20">20</option>
-    <option value="24">24</option>
-    <option value="36">36</option></select
-  >&nbsp;
-  <input type="checkbox" id="nodecolor" checked="checked" />
-  <label for="nodecolor">Color</label>
-  <input type="checkbox" id="autosub" checked="checked" />
-  <label for="autosub">Auto subscript</label>
-  <input type="checkbox" id="triangles" checked="checked" />
-  <label for="triangles">Triangles</label>
-  <input type="checkbox" id="highlighting" checked="checked" />
-  <label for="highlighting">Highlight</label>
-  <select id="align">
-    <option value="0">Top aligned</option>
-    <option value="1">Leaves aligned</option>
-    <option value="2">Bottom aligned</option>
-  </select>
-  <input type="range" id="spacing" min="75" max="150" value="100" />
+  <div class="option">
+    <input type="checkbox" id="nodecolor" checked="checked" />
+    <label for="nodecolor" title="Colored tree nodes"><span>Color</span></label>
+  </div>
+  <div class="option">
+    <input type="checkbox" id="autosub" checked="checked" />
+    <label for="autosub" title="Automatic subscript"
+      ><span>Auto subscript</span></label
+    >
+  </div>
+  <div class="option">
+    <input type="checkbox" id="triangles" checked="checked" />
+    <label for="triangles" title="Enable triangles"
+      ><span>Triangles</span></label
+    >
+  </div>
+  <div class="option separator" id="alignment_select">
+    <input type="radio" id="align_top" name="align" value="top" checked="checked">
+    <label for="align_top" title="Align all nodes towards the top"><span>Top aligned<span></label>
+    <input type="radio" id="align_leaves" name="align" value="leaves">
+    <label for="align_leaves" title="Align leaves at the bottom"><span>Align leaves<span></label>
+    <input type="radio" id="align_bottom" name="align" value="bottom">
+    <label for="align_bottom" title="Align all nodes towards the bottom"><span>Top aligned<span></label>
+  </div>
+  <div class="option separator">
+    <input type="checkbox" id="highlighting" checked="checked" />
+    <label for="highlighting" title="Highlight brackets in text area"
+      ><span>Highlight</span></label
+    >
+  </div>
+  <div class="option separator" id="font_select">
+    <div><select id="font">
+      <option value="sans-serif" selected="selected">Sans-serif</option>
+      <option value="serif">Serif</option>
+      <option value="monospace">Monospace</option>
+      <option value="cursive">Cursive</option>
+      <option value="fantasy">Fantasy</option></select
+    ><select id="fontsize">
+      <option value="12">12</option>
+      <option value="14">14</option>
+      <option value="16" selected="selected">16</option>
+      <option value="18">18</option>
+      <option value="20">20</option>
+      <option value="24">24</option>
+      <option value="36">36</option></select
+    ></div>
+  </div>
+  <div class="option separator" id="spacing_select">
+    <div><input type="range" id="spacing" min="75" max="150" value="100" title="Aspect ratio"/></div>
+  </div>
 </div>
 
 <div id="input">

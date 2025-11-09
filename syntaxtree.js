@@ -54,42 +54,49 @@ function registerServiceWorker() {
 function registerCallbacks() {
   e("code").oninput = update;
 
-  e("font").onchange = () => {
-    tree.setFont(e("font").value);
+  e("font").onchange = (ev) => {
+    tree.setFont(ev.target.value);
     update();
   };
 
-  e("fontsize").onchange = () => {
-    tree.setFontsize(e("fontsize").value);
+  e("fontsize").onchange = (ev) => {
+    tree.setFontsize(ev.target.value);
     update();
   };
 
-  e("triangles").onchange = () => {
-    tree.setTriangles(e("triangles").checked);
+  e("triangles").onchange = (ev) => {
+    tree.setTriangles(ev.target.checked);
     update();
   };
 
-  e("nodecolor").onchange = () => {
-    tree.setColor(e("nodecolor").checked);
+  e("nodecolor").onchange = (ev) => {
+    tree.setColor(ev.target.checked);
     update();
   };
 
-  e("autosub").onchange = () => {
-    tree.setSubscript(e("autosub").checked);
+  e("autosub").onchange = (ev) => {
+    tree.setSubscript(ev.target.checked);
     update();
   };
 
-  e("align").onchange = () => {
-    tree.setAlignment(parseInt(e("align").value, 10));
-    update();
+  e("align_top").onchange = (ev) => {
+    if (ev.target.checked) updateAlignment(tree.ALIGN_TOP);
   };
 
-  e("highlighting").onchange = () => {
-    Highlight.enable(e("code"), e("highlight"), e("highlighting").checked);
+  e("align_leaves").onchange = (ev) => {
+    if (ev.target.checked) updateAlignment(tree.ALIGN_LEAVES);
   };
 
-  e("spacing").oninput = () => {
-    tree.setSpacing(parseFloat(e("spacing").value / 100));
+  e("align_bottom").onchange = (ev) => {
+    if (ev.target.checked) updateAlignment(tree.ALIGN_BOTTOM);
+  };
+
+  e("highlighting").onchange = (ev) => {
+    Highlight.enable(e("code"), e("highlight"), ev.target.checked);
+  };
+
+  e("spacing").oninput = (ev) => {
+    tree.setSpacing(parseFloat(ev.target.value / 100));
     update();
   };
 
@@ -109,6 +116,11 @@ function update() {
   } catch (err) {
     e("parse-error").innerHTML = err;
   }
+}
+
+function updateAlignment(align) {
+  tree.setAlignment(align);
+  update();
 }
 
 function validateTokens(tokens) {

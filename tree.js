@@ -10,11 +10,15 @@ import * as Parser from "./parser.js";
 
 export default class Tree {
   constructor(canvas) {
+    this.ALIGN_TOP = 0;
+    this.ALIGN_LEAVES = 1;
+    this.ALIGN_BOTTOM = 2;
+
     this.nodecolor = true;
     this.fontsize = 16;
     this.triangles = true;
     this.subscript = true;
-    this.alignment = 0;
+    this.alignment = this.ALIGN_TOP;
     this.canvas = null;
     this.vscaler = 1;
   }
@@ -29,8 +33,9 @@ export default class Tree {
 
     const drawables = drawableFromNode(this.canvas, syntax_tree);
     const max_depth = getMaxDepth(drawables);
-    if (this.alignment > 0) moveLeafsToBottom(drawables, max_depth);
-    if (this.alignment > 1) moveParentsDown(drawables);
+    if (this.alignment > this.ALIGN_TOP)
+      moveLeafsToBottom(drawables, max_depth);
+    if (this.alignment > this.ALIGN_LEAVES) moveParentsDown(drawables);
     if (this.subscript) calculateAutoSubscript(drawables);
     const has_arrow = calculateDrawablePositions(
       this.canvas,
