@@ -52,7 +52,7 @@ export default class Tree {
       drawables.width + 1,
       Math.max(
         (max_depth + 1) * (this.fontsize * this.vscaler * 3),
-        has_arrow ? arrowSet.maxBottom * arrowScaler : 0,
+        has_arrow ? arrowSet.maxBottom * arrowScaler + this.fontsize : 0,
       ),
     );
     drawables.children.forEach((child) => this.drawNode(child));
