@@ -53,7 +53,7 @@ export default class Tree {
       Math.max(
         (max_depth + 1) * (this.fontsize * this.vscaler * 3),
         has_arrow ? arrowSet.maxBottom * arrowScaler : 0,
-      ) + this.fontsize + 30,
+      ) + this.fontsize
     );
     drawables.children.forEach((child) => this.drawNode(child));
     this.drawArrows(arrowSet.arrows);
