@@ -16,6 +16,7 @@ const tips = [
     'Example: <a href="?[&quot;Main%20clause&quot;%20[S][V][O]]">[&quot;Main clause&quot; [S][V][O]]</a>',
   "Add arrows to a node by using an -&gt;, &lt- or &lt;&gt; arrow followed by column number.<br />" +
     'Example: <a href="?[A%20[B%20C][D%20E][F%20G%20->1]]">[A [B C][D E][F G ->1]]</a>',
+  "You can copy-and-paste the URL to save your work for later or send to a friend!"
 ];
 
 let tip_idx = Math.floor(Math.random() * tips.length);

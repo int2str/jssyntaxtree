@@ -11,6 +11,7 @@ import rotateTip from "./tip.js";
 import * as Highlight from "./highlight.js";
 import * as Parser from "./parser.js";
 import * as Tokenizer from "./tokenizer.js";
+import * as State from "./state.js"
 
 const tree = new Tree();
 
@@ -21,8 +22,15 @@ window.onload = () => {
   tree.setCanvas(e("canvas"));
   registerCallbacks();
 
-  const query = decodeURI(window.location.search).replace("?", "");
-  if (query != null && query.length > 2) e("code").value = query;
+  const hash = window.location.hash.slice(1);
+  if (hash.length > 0) {
+    try {
+      const decoded = State.decodeState(hash);
+      e("code").value = decoded;
+    } catch (err) {
+      console.warn("Invalid state encoding:", hash);
+    }
+  }
 
   update();
 
@@ -31,6 +39,19 @@ window.onload = () => {
 
   Highlight.setup(e("code"), e("highlight"));
 };
+
+window.addEventListener("hashchange", () => {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+
+  try {
+    const decoded = State.decodeState(hash);
+    e("code").value = decoded;
+    update(); // redraw tree for new state
+  } catch (err) {
+    console.warn("Invalid hash:", hash);
+  }
+});
 
 function e(id) {
   return document.getElementById(id);
@@ -105,6 +126,9 @@ function registerCallbacks() {
 
 function update() {
   const phrase = e("code").value;
+
+  window.location.hash = State.encodeState(phrase)
+
   e("parse-error").innerHTML = "";
 
   try {
