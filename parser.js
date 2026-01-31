@@ -52,7 +52,8 @@ function parseNode(tokens, current) {
     const subscript_token = tokens[++current];
     if (
       subscript_token.type != Tokenizer.TokenType.STRING &&
-      subscript_token.type != Tokenizer.TokenType.QUOTED_STRING
+      subscript_token.type != Tokenizer.TokenType.QUOTED_STRING &&
+      subscript_token.type != Tokenizer.TokenType.NUMBER
     )
       throw current + ": Expected subscript string after _";
     if (is_super) node.superscript = tokens[current++].value;
@@ -103,7 +104,8 @@ function parseValue(tokens, current) {
     const subscript_token = tokens[++current];
     if (
       subscript_token.type != Tokenizer.TokenType.STRING &&
-      subscript_token.type != Tokenizer.TokenType.QUOTED_STRING
+      subscript_token.type != Tokenizer.TokenType.QUOTED_STRING &&
+      subscript_token.type != Tokenizer.TokenType.NUMBER
     )
       throw current + ": Expected subscript string after _/^";
     if (is_super) superscript = tokens[current++].value;
