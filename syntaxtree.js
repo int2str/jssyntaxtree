@@ -17,7 +17,7 @@ const tree = new Tree();
 window.onload = () => {
   registerServiceWorker();
 
-  e("version").innerHTML = VERSION;
+  e("version").innerText = VERSION;
   tree.setCanvas(e("canvas"));
   registerCallbacks();
 
@@ -105,7 +105,7 @@ function registerCallbacks() {
 
 function update() {
   const phrase = e("code").value;
-  e("parse-error").innerHTML = "";
+  e("parse-error").innerText = "";
 
   try {
     const tokens = Tokenizer.tokenize(phrase);
@@ -114,7 +114,7 @@ function update() {
     const syntax_tree = Parser.parse(tokens);
     tree.draw(syntax_tree);
   } catch (err) {
-    e("parse-error").innerHTML = err;
+    e("parse-error").innerText = err;
   }
 }
 
