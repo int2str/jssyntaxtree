@@ -338,10 +338,10 @@ function moveParentsDown(drawable) {
 
 function calculateAutoSubscript(drawables) {
   const map = countNodes(drawables);
-  map.forEach((value, key, map) => {
-    if (value === 1) map.delete(key);
-  });
-  assignSubscripts(drawables, Array.from(map.keys()), new Map());
+  const keys = Array.from(map) //
+    .filter(([, count]) => count > 1) //
+    .map(([key, ]) => key);
+  assignSubscripts(drawables, keys, new Map());
 }
 
 function assignSubscripts(drawable, keys, tally) {
@@ -386,8 +386,7 @@ function findTargetLeaf(drawable, arrow_idx, count) {
 }
 
 function mapInc(map, key) {
-  if (!map.has(key)) map.set(key, 1);
-  else map.set(key, map.get(key) + 1);
+  map.set(key, (map.get(key) ?? 0) + 1);
 }
 
 function mapMerge(one, two) {
