@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2020 Andre Eisenbach <andre@ironcreek.net>
 
-const CACHE_VERSION = 10;
+const CACHE_VERSION = 12;
 const CACHE_NAME = `syntaxtree-cache-v${CACHE_VERSION}`;
 const CACHE_FILES = [
   "/syntaxtree/",
@@ -47,7 +47,7 @@ async function cacheFirst(request) {
 }
 
 self.addEventListener("install", (event) => {
-  console.info("[Service Worker] Install");
+  console.info(`[Service Worker] Install version ${CACHE_NAME}`);
 
   event.waitUntil(
     caches
@@ -65,17 +65,21 @@ self.addEventListener("install", (event) => {
       )
       .catch((error) => console.error("[Service Worker] Pre-fetching failed")),
   );
+
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  console.info("[Service Worker] Activate");
+  console.info(`[Service Worker] Activate version ${CACHE_NAME}`);
 
   event.waitUntil(
     caches.keys().then((key_list) =>
       Promise.all(
         key_list.map((key) => {
           if (key === CACHE_NAME) return;
-          console.log(`[Service Worker] Deleting cache ${key} ...`);
+          console.log(
+            `[Service Worker] Deleting cache ${key}, latest is ${CACHE_NAME} ...`,
+          );
           return caches.delete(key);
         }),
       ),
@@ -84,6 +88,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  console.info(`[Service Worker] Fetching ${event.request.url} ...`);
+  console.info(
+    `[Service Worker] Fetching ${event.request.url} version ${CACHE_NAME} ...`,
+  );
   event.respondWith(cacheFirst(event.request));
 });
