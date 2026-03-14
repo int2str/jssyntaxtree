@@ -128,7 +128,6 @@ function parseValue(tokens, current) {
         tokens[current].type == Tokenizer.TokenType.ARROW_FROM ||
         tokens[current].type == Tokenizer.TokenType.ARROW_BOTH,
     };
-    tokens[current].type == Tokenizer.TokenType.ARROW_BOTH;
 
     const target_token = tokens[++current];
     if (target_token.type != Tokenizer.TokenType.NUMBER)
