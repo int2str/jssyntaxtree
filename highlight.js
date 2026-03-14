@@ -6,12 +6,10 @@ let highlighting_enabled = true;
 
 export function setup(code, highlight) {
   code.addEventListener("input", () => updateHighlight(code, highlight));
-  code.addEventListener("click", () =>
-    updateHighlight(code, highlight, code.selectionStart),
-  );
-  code.addEventListener("keyup", () =>
-    updateHighlight(code, highlight, code.selectionStart),
-  );
+  code.addEventListener("selectionchange", () => {
+    if (document.activeElement === code)
+      updateHighlight(code, highlight, code.selectionStart);
+  });
   code.addEventListener("scroll", () => {
     highlight.scrollTop = code.scrollTop;
     highlight.scrollLeft = code.scrollLeft;
