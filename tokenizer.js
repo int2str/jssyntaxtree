@@ -42,11 +42,11 @@ export function tokenize(input) {
     for (const parse_fn of parsers) {
       const [token, consumed] = parse_fn(input.substring(offset));
       offset += consumed;
-      if (token != null) tokens.push(token);
+      if (token !== null) tokens.push(token);
       if (offset >= input.length) break;
     }
 
-    if (offset == now_serving)
+    if (offset === now_serving)
       throw "Unable to parse [" + input.substring(offset) + "] ...";
   }
 
@@ -74,11 +74,11 @@ function skipWhitespace(input) {
 }
 
 function parseControlCharacters(input) {
-  if (input.charAt(0) == "_") return [new Token(TokenType.SUBSCRIPT_PREFIX), 1];
-  if (input.charAt(0) == "^")
+  if (input.charAt(0) === "_") return [new Token(TokenType.SUBSCRIPT_PREFIX), 1];
+  if (input.charAt(0) === "^")
     return [new Token(TokenType.SUPERSCRIPT_PREFIX), 1];
-  if (input.charAt(0) == "[") return [new Token(TokenType.BRACKET_OPEN), 1];
-  if (input.charAt(0) == "]") return [new Token(TokenType.BRACKET_CLOSE), 1];
+  if (input.charAt(0) === "[") return [new Token(TokenType.BRACKET_OPEN), 1];
+  if (input.charAt(0) === "]") return [new Token(TokenType.BRACKET_CLOSE), 1];
   return [null, 0];
 }
 
@@ -124,10 +124,10 @@ function parseString(input) {
 }
 
 function parseQuotedString(input) {
-  if (input.charAt(0) != '"') return [null, 0];
+  if (input.charAt(0) !== '"') return [null, 0];
   let consumed = 1;
-  while (consumed < input.length && input.charAt(consumed) != '"') ++consumed;
-  if (input.charAt(consumed) != '"')
+  while (consumed < input.length && input.charAt(consumed) !== '"') ++consumed;
+  if (input.charAt(consumed) !== '"')
     throw 'Unterminated quoted string. Missing " after [' + input + "]";
   return [
     new Token(TokenType.QUOTED_STRING, input.substring(1, consumed)),

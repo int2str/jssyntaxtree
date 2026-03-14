@@ -35,8 +35,8 @@ function parseNode(tokens, current) {
   if (current > tokens.length - 2) throw "Missing label after [";
   const label_token = tokens[++current];
   if (
-    label_token.type != Tokenizer.TokenType.STRING &&
-    label_token.type != Tokenizer.TokenType.QUOTED_STRING
+    label_token.type !== Tokenizer.TokenType.STRING &&
+    label_token.type !== Tokenizer.TokenType.QUOTED_STRING
   )
     throw "Expected label string after [";
   node.label = tokens[current++].value;
@@ -44,16 +44,16 @@ function parseNode(tokens, current) {
   // Check for subscript
   if (
     current < tokens.length - 1 &&
-    (tokens[current].type == Tokenizer.TokenType.SUBSCRIPT_PREFIX ||
-      tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX)
+    (tokens[current].type === Tokenizer.TokenType.SUBSCRIPT_PREFIX ||
+      tokens[current].type === Tokenizer.TokenType.SUPERSCRIPT_PREFIX)
   ) {
     let is_super =
-      tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX;
+      tokens[current].type === Tokenizer.TokenType.SUPERSCRIPT_PREFIX;
     const subscript_token = tokens[++current];
     if (
-      subscript_token.type != Tokenizer.TokenType.STRING &&
-      subscript_token.type != Tokenizer.TokenType.QUOTED_STRING &&
-      subscript_token.type != Tokenizer.TokenType.NUMBER
+      subscript_token.type !== Tokenizer.TokenType.STRING &&
+      subscript_token.type !== Tokenizer.TokenType.QUOTED_STRING &&
+      subscript_token.type !== Tokenizer.TokenType.NUMBER
     )
       throw current + ": Expected subscript string after _";
     if (is_super) node.superscript = tokens[current++].value;
@@ -63,7 +63,7 @@ function parseNode(tokens, current) {
   // Parse children
   while (
     current < tokens.length &&
-    tokens[current].type != Tokenizer.TokenType.BRACKET_CLOSE
+    tokens[current].type !== Tokenizer.TokenType.BRACKET_CLOSE
   ) {
     let value = null;
     [current, value] = parseToken(tokens, current);
@@ -79,11 +79,11 @@ function parseNode(tokens, current) {
 function parseValue(tokens, current) {
   // Assemble multi string or quoted string label
   let label = null;
-  if (tokens[current].type == Tokenizer.TokenType.STRING) {
+  if (tokens[current].type === Tokenizer.TokenType.STRING) {
     const values = [];
     while (
       current < tokens.length &&
-      tokens[current].type == Tokenizer.TokenType.STRING
+      tokens[current].type === Tokenizer.TokenType.STRING
     )
       values.push(tokens[current++].value);
     label = values.join(" ");
@@ -96,16 +96,16 @@ function parseValue(tokens, current) {
   let superscript = null;
   if (
     current < tokens.length - 1 &&
-    (tokens[current].type == Tokenizer.TokenType.SUBSCRIPT_PREFIX ||
-      tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX)
+    (tokens[current].type === Tokenizer.TokenType.SUBSCRIPT_PREFIX ||
+      tokens[current].type === Tokenizer.TokenType.SUPERSCRIPT_PREFIX)
   ) {
     let is_super =
-      tokens[current].type == Tokenizer.TokenType.SUPERSCRIPT_PREFIX;
+      tokens[current].type === Tokenizer.TokenType.SUPERSCRIPT_PREFIX;
     const subscript_token = tokens[++current];
     if (
-      subscript_token.type != Tokenizer.TokenType.STRING &&
-      subscript_token.type != Tokenizer.TokenType.QUOTED_STRING &&
-      subscript_token.type != Tokenizer.TokenType.NUMBER
+      subscript_token.type !== Tokenizer.TokenType.STRING &&
+      subscript_token.type !== Tokenizer.TokenType.QUOTED_STRING &&
+      subscript_token.type !== Tokenizer.TokenType.NUMBER
     )
       throw current + ": Expected subscript string after _/^";
     if (is_super) superscript = tokens[current++].value;
@@ -116,21 +116,21 @@ function parseValue(tokens, current) {
   let arrow = null;
   if (
     current < tokens.length - 1 &&
-    (tokens[current].type == Tokenizer.TokenType.ARROW_TO ||
-      tokens[current].type == Tokenizer.TokenType.ARROW_FROM ||
-      tokens[current].type == Tokenizer.TokenType.ARROW_BOTH)
+    (tokens[current].type === Tokenizer.TokenType.ARROW_TO ||
+      tokens[current].type === Tokenizer.TokenType.ARROW_FROM ||
+      tokens[current].type === Tokenizer.TokenType.ARROW_BOTH)
   ) {
     const ends = {
       to:
-        tokens[current].type == Tokenizer.TokenType.ARROW_TO ||
-        tokens[current].type == Tokenizer.TokenType.ARROW_BOTH,
+        tokens[current].type === Tokenizer.TokenType.ARROW_TO ||
+        tokens[current].type === Tokenizer.TokenType.ARROW_BOTH,
       from:
-        tokens[current].type == Tokenizer.TokenType.ARROW_FROM ||
-        tokens[current].type == Tokenizer.TokenType.ARROW_BOTH,
+        tokens[current].type === Tokenizer.TokenType.ARROW_FROM ||
+        tokens[current].type === Tokenizer.TokenType.ARROW_BOTH,
     };
 
     const target_token = tokens[++current];
-    if (target_token.type != Tokenizer.TokenType.NUMBER)
+    if (target_token.type !== Tokenizer.TokenType.NUMBER)
       throw current + ": Expected column number after -> or <>";
     arrow = { ends: ends, target: tokens[current++].value };
   }

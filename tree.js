@@ -29,7 +29,7 @@ export default class Tree {
   }
 
   draw(syntax_tree) {
-    if (this.canvas == null) throw "Canvas must be set first.";
+    if (this.canvas === null) throw "Canvas must be set first.";
 
     const drawables = drawableFromNode(this.canvas, syntax_tree);
     const max_depth = getMaxDepth(drawables);
@@ -226,12 +226,12 @@ function drawableFromNode(canvas, node, depth = -1) {
     superscript: node.superscript,
     width: getNodeWidth(canvas, node),
     depth: depth,
-    is_leaf: node.type == Parser.NodeType.VALUE,
+    is_leaf: node.type === Parser.NodeType.VALUE,
     arrow: "arrow" in node ? node.arrow : null,
     children: [],
   };
 
-  if (node.type != Parser.NodeType.VALUE) {
+  if (node.type !== Parser.NodeType.VALUE) {
     node.values.forEach((child) => {
       drawable.children.push(drawableFromNode(canvas, child, depth + 1));
     });
@@ -242,7 +242,7 @@ function drawableFromNode(canvas, node, depth = -1) {
 
 function getNodeWidth(canvas, node) {
   let label_width =
-    node.type != Parser.NodeType.ROOT
+    node.type !== Parser.NodeType.ROOT
       ? canvas.textWidth(node.label) + NODE_PADDING
       : 0;
   if (node.subscript)
@@ -250,7 +250,7 @@ function getNodeWidth(canvas, node) {
   else if (node.superscript)
     label_width += ((canvas.textWidth(node.superscript) * 3) / 4) * 2;
 
-  if (node.type != Parser.NodeType.VALUE) {
+  if (node.type !== Parser.NodeType.VALUE) {
     return Math.max(label_width, getChildWidth(canvas, node));
   } else {
     return label_width;
@@ -291,7 +291,7 @@ function calculateDrawablePositions(
 }
 
 function getChildWidth(canvas, node) {
-  if (node.type == Parser.NodeType.VALUE) return 0;
+  if (node.type === Parser.NodeType.VALUE) return 0;
   let child_width = 0;
   node.values.forEach((child) => {
     child_width += getNodeWidth(canvas, child);
@@ -300,7 +300,7 @@ function getChildWidth(canvas, node) {
 }
 
 function getDrawableChildWidth(canvas, drawable) {
-  if (drawable.children.length == 0) return drawable.width;
+  if (drawable.children.length === 0) return drawable.width;
   let child_width = 0;
   drawable.children.forEach((child) => {
     child_width += child.width;
@@ -327,7 +327,7 @@ function moveParentsDown(drawable) {
 
   drawable.children.forEach((child) => moveParentsDown(child));
 
-  if (drawable.depth != 0) {
+  if (drawable.depth !== 0) {
     let depth = Infinity;
     for (let child of drawable.children) {
       if (child.depth - 1 < depth) depth = child.depth - 1;
@@ -376,11 +376,11 @@ function findTarget(drawable, arrow_idx) {
 }
 
 function findTargetLeaf(drawable, arrow_idx, count) {
-  if (drawable.is_leaf && ++count == arrow_idx) return [count, drawable];
+  if (drawable.is_leaf && ++count === arrow_idx) return [count, drawable];
   for (const child of drawable.children) {
     let target = null;
     [count, target] = findTargetLeaf(child, arrow_idx, count);
-    if (target != null) return [count, target];
+    if (target !== null) return [count, target];
   }
   return [count, null];
 }

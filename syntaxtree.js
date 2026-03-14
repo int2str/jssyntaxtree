@@ -22,7 +22,7 @@ window.onload = () => {
   registerCallbacks();
 
   const query = decodeURI(window.location.search).replace("?", "");
-  if (query != null && query.length > 2) e("code").value = query;
+  if (query !== null && query.length > 2) e("code").value = query;
 
   update();
 
@@ -126,8 +126,8 @@ function updateAlignment(align) {
 function validateTokens(tokens) {
   if (tokens.length < 3) throw "Phrase too short";
   if (
-    tokens[0].type != Tokenizer.TokenType.BRACKET_OPEN ||
-    tokens[tokens.length - 1].type != Tokenizer.TokenType.BRACKET_CLOSE
+    tokens[0].type !== Tokenizer.TokenType.BRACKET_OPEN ||
+    tokens[tokens.length - 1].type !== Tokenizer.TokenType.BRACKET_CLOSE
   )
     throw "Phrase must start with [ and end with ]";
   const brackets = countOpenBrackets(tokens);
@@ -139,8 +139,8 @@ function validateTokens(tokens) {
 function countOpenBrackets(tokens) {
   let o = 0;
   for (const token of tokens) {
-    if (token.type == Tokenizer.TokenType.BRACKET_OPEN) ++o;
-    if (token.type == Tokenizer.TokenType.BRACKET_CLOSE) --o;
+    if (token.type === Tokenizer.TokenType.BRACKET_OPEN) ++o;
+    if (token.type === Tokenizer.TokenType.BRACKET_CLOSE) --o;
   }
   return o;
 }
