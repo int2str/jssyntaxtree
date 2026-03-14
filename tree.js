@@ -17,6 +17,7 @@ export default class Tree {
     this.nodecolor = true;
     this.fontsize = 16;
     this.triangles = true;
+    this.terminal_lines = true;
     this.subscript = true;
     this.alignment = this.ALIGN_TOP;
     this.canvas = null;
@@ -41,6 +42,9 @@ export default class Tree {
       this.canvas,
       drawables,
       this.vscaler,
+      0,
+      this.terminal_lines,
+      this.triangles,
     );
     const arrowSet = makeArrowSet(drawables, this.fontsize);
     const arrowScaler = Math.pow(
@@ -48,10 +52,11 @@ export default class Tree {
       1 / 50,
     );
 
+    const visible_depth = this.terminal_lines ? max_depth + 1 : max_depth;
     this.resizeCanvas(
       drawables.width + 1,
       Math.max(
-        (max_depth + 1) * (this.fontsize * this.vscaler * 3),
+        visible_depth * (this.fontsize * this.vscaler * 3),
         has_arrow ? arrowSet.maxBottom * arrowScaler + this.fontsize : 0,
       ),
     );
@@ -105,7 +110,9 @@ export default class Tree {
   }
 
   drawConnector(parent, child) {
-    if (this.triangles && child.is_leaf && child.label.includes(" ")) {
+    const isTriangle = this.triangles && child.is_leaf && child.label.includes(" ");
+    if (!this.terminal_lines && child.is_leaf && !isTriangle) return;
+    if (isTriangle) {
       const text_width = this.canvas.textWidth(child.label);
       this.canvas.triangle(
         getDrawableCenter(parent),
@@ -171,6 +178,10 @@ export default class Tree {
 
   setTriangles(t) {
     this.triangles = t;
+  }
+
+  setLines(l) {
+    this.terminal_lines = l;
   }
 
   setSubscript(s) {
@@ -262,6 +273,8 @@ function calculateDrawablePositions(
   drawable,
   vscaler,
   parent_offset = 0,
+  terminal_lines = true,
+  triangles = true,
 ) {
   let offset = 0;
   let scale = 1;
@@ -273,8 +286,11 @@ function calculateDrawablePositions(
   }
 
   drawable.children.forEach((child) => {
-    child.top =
-      child.depth * (canvas.fontsize * 3 * vscaler) + NODE_PADDING / 2;
+    const isTriangle = triangles && child.is_leaf && child.label.includes(" ");
+    const noLine = !terminal_lines && child.is_leaf && !isTriangle;
+    child.top = noLine
+      ? drawable.top + canvas.fontsize + NODE_PADDING / 2
+      : child.depth * (canvas.fontsize * 3 * vscaler) + NODE_PADDING / 2;
     child.left = offset + parent_offset;
     child.width *= scale;
     const child_has_arrow = calculateDrawablePositions(
@@ -282,6 +298,8 @@ function calculateDrawablePositions(
       child,
       vscaler,
       child.left,
+      terminal_lines,
+      triangles,
     );
     if (child_has_arrow) hasArrow = true;
     offset += child.width;
@@ -321,6 +339,7 @@ function moveLeafsToBottom(drawable, bottom) {
   if (drawable.is_leaf) drawable.depth = bottom;
   drawable.children.forEach((child) => moveLeafsToBottom(child, bottom));
 }
+
 
 function moveParentsDown(drawable) {
   if (drawable.is_leaf) return;

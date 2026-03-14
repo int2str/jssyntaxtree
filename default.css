@@ -87,6 +87,10 @@ label[for="triangles"] {
   background: url("icons/triangle.svg") no-repeat center center;
 }
 
+label[for="terminal_lines"] {
+  background: url("icons/terminal_lines.svg") no-repeat center center;
+}
+
 label[for="highlighting"] {
   background: url("icons/highlighter.svg") no-repeat center center;
 }

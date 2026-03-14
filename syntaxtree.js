@@ -69,6 +69,11 @@ function registerCallbacks() {
     update();
   };
 
+  e("terminal_lines").onchange = (ev) => {
+    tree.setLines(ev.target.checked);
+    update();
+  };
+
   e("nodecolor").onchange = (ev) => {
     tree.setColor(ev.target.checked);
     update();
