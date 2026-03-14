@@ -47,7 +47,7 @@ export function tokenize(input) {
     }
 
     if (offset == now_serving)
-      throw "Unable to parse [" + s.substring(offset) + "] ...";
+      throw "Unable to parse [" + input.substring(offset) + "] ...";
   }
 
   return tokens;
