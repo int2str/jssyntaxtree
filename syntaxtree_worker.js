@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2020 Andre Eisenbach <andre@ironcreek.net>
 
-const CACHE_VERSION = 9;
+const CACHE_VERSION = 10;
 const CACHE_NAME = `syntaxtree-cache-v${CACHE_VERSION}`;
 const CACHE_FILES = [
   "/syntaxtree/",
@@ -10,6 +10,7 @@ const CACHE_FILES = [
   "/syntaxtree/syntaxtree_icon.png",
   "/syntaxtree/syntaxtree.webmanifest",
   "/syntaxtree/canvas.js",
+  "/syntaxtree/svg_canvas.js",
   "/syntaxtree/highlight.js",
   "/syntaxtree/parser.js",
   "/syntaxtree/syntaxtree.js",
@@ -20,6 +21,9 @@ const CACHE_FILES = [
   "/syntaxtree/icons/palette.svg",
   "/syntaxtree/icons/subscript.svg",
   "/syntaxtree/icons/triangle.svg",
+  "/syntaxtree/icons/terminal_lines.svg",
+  "/syntaxtree/icons/download_png.svg",
+  "/syntaxtree/icons/download_svg.svg",
   "/syntaxtree/icons/vertical_align_bottom.svg",
   "/syntaxtree/icons/vertical_align_center.svg",
   "/syntaxtree/icons/vertical_align_top.svg",

@@ -6,6 +6,7 @@
 const NODE_PADDING = 20;
 
 import Canvas from "./canvas.js";
+import SvgCanvas from "./svg_canvas.js";
 import * as Parser from "./parser.js";
 
 export default class Tree {
@@ -21,17 +22,11 @@ export default class Tree {
     this.subscript = true;
     this.alignment = this.ALIGN_TOP;
     this.canvas = null;
+    this.syntax_tree = null;
     this.vscaler = 1;
   }
 
-  resizeCanvas(w, h) {
-    this.canvas.resize(w, h);
-    this.canvas.translate(0, this.canvas.fontsize / 2);
-  }
-
-  draw(syntax_tree) {
-    if (this.canvas === null) throw "Canvas must be set first.";
-
+  #layout(syntax_tree) {
     const drawables = drawableFromNode(this.canvas, syntax_tree);
     const max_depth = getMaxDepth(drawables);
     if (this.alignment > this.ALIGN_TOP)
@@ -51,70 +46,88 @@ export default class Tree {
       Math.sqrt(arrowSet.maxBottom) / arrowSet.maxBottom,
       1 / 50,
     );
-
     const visible_depth = this.terminal_lines ? max_depth + 1 : max_depth;
-    this.resizeCanvas(
-      drawables.width + 1,
-      Math.max(
-        visible_depth * (this.fontsize * this.vscaler * 3),
-        has_arrow ? arrowSet.maxBottom * arrowScaler + this.fontsize : 0,
-      ),
+    const width = drawables.width + 1;
+    const height = Math.max(
+      visible_depth * (this.fontsize * this.vscaler * 3),
+      has_arrow ? arrowSet.maxBottom * arrowScaler + this.fontsize : 0,
     );
-    drawables.children.forEach((child) => this.drawNode(child));
-    this.drawArrows(arrowSet.arrows);
+    return { drawables, arrowSet, width, height };
   }
 
-  drawNode(drawable) {
-    this.drawLabel(drawable);
-    this.drawSubscript(drawable);
+  #render(target, drawables, arrowSet, width, height) {
+    target.resize(width, height);
+    target.translate(0, target.fontsize / 2);
+    drawables.children.forEach((child) => this.drawNode(child, target));
+    this.drawArrows(arrowSet.arrows, target);
+  }
+
+  draw(syntax_tree) {
+    if (this.canvas === null) throw "Canvas must be set first.";
+    this.syntax_tree = syntax_tree;
+    const { drawables, arrowSet, width, height } = this.#layout(syntax_tree);
+    this.#render(this.canvas, drawables, arrowSet, width, height);
+  }
+
+  downloadSvg() {
+    if (!this.syntax_tree) return;
+    const svg_canvas = new SvgCanvas(this.canvas);
+    const { drawables, arrowSet, width, height } = this.#layout(this.syntax_tree);
+    this.#render(svg_canvas, drawables, arrowSet, width, height);
+    svg_canvas.download('syntax_tree.svg');
+  }
+
+  drawNode(drawable, target) {
+    this.drawLabel(drawable, target);
+    this.drawSubscript(drawable, target);
 
     drawable.children.forEach((child) => {
-      this.drawNode(child);
-      this.drawConnector(drawable, child);
+      this.drawNode(child, target);
+      this.drawConnector(drawable, child, target);
     });
   }
 
-  drawLabel(drawable) {
-    this.canvas.setFontSize(this.fontsize);
+  drawLabel(drawable, target) {
+    target.setFontSize(this.fontsize);
     if (this.nodecolor) {
-      this.canvas.setFillStyle(drawable.is_leaf ? "#CC0000" : "#0000CC");
+      target.setFillStyle(drawable.is_leaf ? "#CC0000" : "#0000CC");
     } else {
-      this.canvas.setFillStyle("black");
+      target.setFillStyle("black");
     }
-    this.canvas.text(
+    target.text(
       drawable.label,
       getDrawableCenter(drawable),
       drawable.top + 2,
     );
   }
 
-  drawSubscript(drawable) {
+  drawSubscript(drawable, target) {
     if (!drawable.subscript && !drawable.superscript) return;
     let offset =
       1 +
       getDrawableCenter(drawable) +
-      this.canvas.textWidth(drawable.label) / 2;
-    this.canvas.setFontSize((this.fontsize * 3) / 4);
+      target.textWidth(drawable.label) / 2;
+    target.setFontSize((this.fontsize * 3) / 4);
     if (drawable.subscript) {
-      offset += this.canvas.textWidth(drawable.subscript) / 2;
-      this.canvas.text(
+      offset += target.textWidth(drawable.subscript) / 2;
+      target.text(
         drawable.subscript,
         offset,
         drawable.top + this.fontsize / 2,
       );
     } else {
-      offset += this.canvas.textWidth(drawable.superscript) / 2;
-      this.canvas.text(drawable.superscript, offset, drawable.top);
+      offset += target.textWidth(drawable.superscript) / 2;
+      target.text(drawable.superscript, offset, drawable.top);
     }
-    this.canvas.setFontSize(this.fontsize); // Reset font
+    target.setFontSize(this.fontsize); // Reset font
   }
 
-  drawConnector(parent, child) {
+  drawConnector(parent, child, target) {
     const isTriangle = this.triangles && child.is_leaf && child.label.includes(" ");
     if (!this.terminal_lines && child.is_leaf && !isTriangle) return;
     if (isTriangle) {
-      const text_width = this.canvas.textWidth(child.label);
-      this.canvas.triangle(
+      const text_width = target.textWidth(child.label);
+      target.triangle(
         getDrawableCenter(parent),
         parent.top + this.fontsize + 2,
         getDrawableCenter(child) + text_width / 2 - 4,
@@ -123,7 +136,7 @@ export default class Tree {
         child.top - 3,
       );
     } else {
-      this.canvas.line(
+      target.line(
         getDrawableCenter(parent),
         parent.top + this.fontsize + 2,
         getDrawableCenter(child),
@@ -132,13 +145,13 @@ export default class Tree {
     }
   }
 
-  drawArrows(arrows) {
+  drawArrows(arrows, target) {
     const arrow_color = this.nodecolor ? "#909" : "#999";
-    this.canvas.setFillStyle(arrow_color);
-    this.canvas.setStrokeStyle(arrow_color);
-    this.canvas.setLineWidth(2);
+    target.setFillStyle(arrow_color);
+    target.setStrokeStyle(arrow_color);
+    target.setLineWidth(2);
     for (const arrow of arrows) {
-      this.canvas.curve(
+      target.curve(
         arrow.from_x,
         arrow.from_y,
         arrow.to_x,
@@ -148,15 +161,15 @@ export default class Tree {
         arrow.to_x,
         arrow.bottom,
       );
-      if (arrow.ends_to) this.drawArrowHead(arrow.to_x, arrow.to_y);
-      if (arrow.ends_from) this.drawArrowHead(arrow.from_x, arrow.from_y);
+      if (arrow.ends_to) this.drawArrowHead(arrow.to_x, arrow.to_y, target);
+      if (arrow.ends_from) this.drawArrowHead(arrow.from_x, arrow.from_y, target);
     }
   }
 
-  drawArrowHead(x, y) {
+  drawArrowHead(x, y, target) {
     const cx = this.fontsize / 4;
     const cy = this.fontsize / 2;
-    this.canvas.triangle(x, y, x - cx, y + cy, x + cx, y + cy, true);
+    target.triangle(x, y, x - cx, y + cy, x + cx, y + cy, true);
   }
 
   setCanvas(c) {

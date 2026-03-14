@@ -106,6 +106,8 @@ function registerCallbacks() {
   };
 
   e("canvas").onclick = () => tree.download();
+  e("download_png").onclick = () => tree.download();
+  e("download_svg").onclick = () => tree.downloadSvg();
 }
 
 function update() {
