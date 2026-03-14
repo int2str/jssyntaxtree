@@ -328,7 +328,7 @@ function moveParentsDown(drawable) {
   drawable.children.forEach((child) => moveParentsDown(child));
 
   if (drawable.depth != 0) {
-    let depth = 999999;
+    let depth = Infinity;
     for (let child of drawable.children) {
       if (child.depth - 1 < depth) depth = child.depth - 1;
     }
