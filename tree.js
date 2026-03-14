@@ -25,7 +25,7 @@ export default class Tree {
 
   resizeCanvas(w, h) {
     this.canvas.resize(w, h);
-    this.canvas.translate(0, canvas.fontsize / 2);
+    this.canvas.translate(0, this.canvas.fontsize / 2);
   }
 
   draw(syntax_tree) {
