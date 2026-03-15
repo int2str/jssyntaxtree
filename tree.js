@@ -48,9 +48,11 @@ export default class Tree {
     );
     const visible_depth = this.terminal_lines ? max_depth + 1 : max_depth;
     const width = drawables.width + 1;
+    const nodes_bottom = getMaxBottom(drawables) + this.fontsize * 2;
     const height = Math.max(
       visible_depth * (this.fontsize * this.vscaler * 3),
       has_arrow ? arrowSet.maxBottom * arrowScaler + this.fontsize : 0,
+      nodes_bottom,
     );
     return { drawables, arrowSet, width, height };
   }
@@ -346,6 +348,13 @@ function getMaxDepth(drawable) {
     if (child_depth > max_depth) max_depth = child_depth;
   });
   return max_depth;
+}
+
+function getMaxBottom(drawable) {
+  return drawable.children.reduce(
+    (max, child) => Math.max(max, getMaxBottom(child)),
+    drawable.top || 0,
+  );
 }
 
 function moveLeafsToBottom(drawable, bottom) {
