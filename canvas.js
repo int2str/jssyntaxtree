@@ -12,8 +12,10 @@ export default class Canvas {
   }
 
   resize(w, h) {
-    this.canvas.width = w;
-    this.canvas.height = h;
+    this.canvas.width = w * 2;
+    this.canvas.height = h * 2;
+    this.canvas.style.width = w + 'px';
+    this.canvas.style.height = h + 'px';
     this.clear();
   }
 
@@ -24,7 +26,7 @@ export default class Canvas {
 
   clear() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.setTransform(1, 0, 0, 1, 0, 0);
+    this.context.setTransform(2, 0, 0, 2, 0, 0);
     this.context.textAlign = 'center';
     this.context.textBaseline = 'top';
   }
