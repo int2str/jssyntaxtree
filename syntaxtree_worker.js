@@ -1,35 +1,36 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2020 Andre Eisenbach <andre@ironcreek.net>
 
-const CACHE_VERSION = 14;
+const CACHE_VERSION = 15;
 const CACHE_NAME = `syntaxtree-cache-v${CACHE_VERSION}`;
 const CACHE_FILES = [
-  "/syntaxtree/",
-  "/syntaxtree/index.html",
-  "/syntaxtree/default.css",
-  "/syntaxtree/syntaxtree_icon.png",
-  "/syntaxtree/syntaxtree.webmanifest",
-  "/syntaxtree/canvas.js",
-  "/syntaxtree/svg_canvas.js",
-  "/syntaxtree/highlight.js",
-  "/syntaxtree/parser.js",
-  "/syntaxtree/syntaxtree.js",
-  "/syntaxtree/tip.js",
-  "/syntaxtree/tokenizer.js",
-  "/syntaxtree/tree.js",
-  "/syntaxtree/icons/highlighter.svg",
-  "/syntaxtree/icons/palette.svg",
-  "/syntaxtree/icons/subscript.svg",
-  "/syntaxtree/icons/triangle.svg",
-  "/syntaxtree/icons/terminal_lines.svg",
-  "/syntaxtree/icons/download_png.svg",
-  "/syntaxtree/icons/download_svg.svg",
-  "/syntaxtree/icons/vertical_align_bottom.svg",
-  "/syntaxtree/icons/vertical_align_center.svg",
-  "/syntaxtree/icons/vertical_align_top.svg",
+  "./",
+  "index.html",
+  "default.css",
+  "syntaxtree_icon.png",
+  "syntaxtree.webmanifest",
+  "canvas.js",
+  "svg_canvas.js",
+  "highlight.js",
+  "parser.js",
+  "syntaxtree.js",
+  "tip.js",
+  "tokenizer.js",
+  "tree.js",
+  "icons/highlighter.svg",
+  "icons/palette.svg",
+  "icons/subscript.svg",
+  "icons/triangle.svg",
+  "icons/terminal_lines.svg",
+  "icons/download_png.svg",
+  "icons/download_svg.svg",
+  "icons/vertical_align_bottom.svg",
+  "icons/vertical_align_center.svg",
+  "icons/vertical_align_top.svg",
 ];
 
 async function cacheStore(request, response) {
+  if (!response || response.status !== 200 || response.type !== "basic") return;
   const cache = await caches.open(CACHE_NAME);
   await cache.put(request, response);
 }
@@ -49,21 +50,20 @@ async function cacheFirst(request) {
 self.addEventListener("install", (event) => {
   console.info(`[Service Worker] Install version ${CACHE_NAME}`);
 
+  const urlsToCache = CACHE_FILES.map(
+    (path) => new URL(path, self.registration.scope).href,
+  );
+
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) =>
-        cache
-          .addAll(
-            CACHE_FILES.map(
-              (url) => new Request(url, { cache: "reload", mode: "no-cors" }),
-            ),
-          )
-          .then(() => {
-            console.info("[Service Worker] Resources pre-fetched.");
-          }),
-      )
-      .catch((error) => console.error("[Service Worker] Pre-fetching failed")),
+      .then((cache) => cache.addAll(urlsToCache))
+      .then(() => {
+        console.info("[Service Worker] Resources pre-fetched.");
+      })
+      .catch((error) =>
+        console.error("[Service Worker] Pre-fetching failed:", error),
+      ),
   );
 
   self.skipWaiting();

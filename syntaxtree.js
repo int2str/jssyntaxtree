@@ -14,15 +14,18 @@ import * as Tokenizer from "./tokenizer.js";
 
 const tree = new Tree();
 
-window.onload = () => {
+window.addEventListener("load", () => {
   registerServiceWorker();
 
   e("version").innerText = VERSION;
   tree.setCanvas(e("canvas"));
   registerCallbacks();
 
-  const query = decodeURI(window.location.search).replace("?", "");
-  if (query !== null && query.length > 2) e("code").value = query;
+  const search = window.location.search;
+  if (search.length > 1) {
+    const query = decodeURIComponent(search.substring(1));
+    if (query.length > 2) e("code").value = query;
+  }
 
   update();
 
@@ -30,7 +33,7 @@ window.onload = () => {
   setInterval(rotateTip, 30 * 1000);
 
   Highlight.setup(e("code"), e("highlight"));
-};
+});
 
 function e(id) {
   return document.getElementById(id);
@@ -52,62 +55,62 @@ function registerServiceWorker() {
 }
 
 function registerCallbacks() {
-  e("code").oninput = update;
+  e("code").addEventListener("input", update);
 
-  e("font").onchange = (ev) => {
+  e("font").addEventListener("change", (ev) => {
     tree.setFont(ev.target.value);
     update();
-  };
+  });
 
-  e("fontsize").onchange = (ev) => {
+  e("fontsize").addEventListener("change", (ev) => {
     tree.setFontsize(ev.target.value);
     update();
-  };
+  });
 
-  e("triangles").onchange = (ev) => {
+  e("triangles").addEventListener("change", (ev) => {
     tree.setTriangles(ev.target.checked);
     update();
-  };
+  });
 
-  e("terminal_lines").onchange = (ev) => {
+  e("terminal_lines").addEventListener("change", (ev) => {
     tree.setLines(ev.target.checked);
     update();
-  };
+  });
 
-  e("nodecolor").onchange = (ev) => {
+  e("nodecolor").addEventListener("change", (ev) => {
     tree.setColor(ev.target.checked);
     update();
-  };
+  });
 
-  e("autosub").onchange = (ev) => {
+  e("autosub").addEventListener("change", (ev) => {
     tree.setSubscript(ev.target.checked);
     update();
-  };
+  });
 
-  e("align_top").onchange = (ev) => {
-    if (ev.target.checked) updateAlignment(tree.ALIGN_TOP);
-  };
+  e("align_top").addEventListener("change", (ev) => {
+    if (ev.target.checked) updateAlignment(Tree.ALIGN_TOP);
+  });
 
-  e("align_leaves").onchange = (ev) => {
-    if (ev.target.checked) updateAlignment(tree.ALIGN_LEAVES);
-  };
+  e("align_leaves").addEventListener("change", (ev) => {
+    if (ev.target.checked) updateAlignment(Tree.ALIGN_LEAVES);
+  });
 
-  e("align_bottom").onchange = (ev) => {
-    if (ev.target.checked) updateAlignment(tree.ALIGN_BOTTOM);
-  };
+  e("align_bottom").addEventListener("change", (ev) => {
+    if (ev.target.checked) updateAlignment(Tree.ALIGN_BOTTOM);
+  });
 
-  e("highlighting").onchange = (ev) => {
+  e("highlighting").addEventListener("change", (ev) => {
     Highlight.enable(e("code"), e("highlight"), ev.target.checked);
-  };
+  });
 
-  e("spacing").oninput = (ev) => {
+  e("spacing").addEventListener("input", (ev) => {
     tree.setSpacing(parseFloat(ev.target.value / 100));
     update();
-  };
+  });
 
-  e("canvas").onclick = () => tree.download();
-  e("download_png").onclick = () => tree.download();
-  e("download_svg").onclick = () => tree.downloadSvg();
+  e("canvas").addEventListener("click", () => tree.download());
+  e("download_png").addEventListener("click", () => tree.download());
+  e("download_svg").addEventListener("click", () => tree.downloadSvg());
 }
 
 function update() {
@@ -121,7 +124,7 @@ function update() {
     const syntax_tree = Parser.parse(tokens);
     tree.draw(syntax_tree);
   } catch (err) {
-    e("parse-error").innerText = err;
+    e("parse-error").innerText = err.message || err;
   }
 }
 
@@ -131,15 +134,16 @@ function updateAlignment(align) {
 }
 
 function validateTokens(tokens) {
-  if (tokens.length < 3) throw "Phrase too short";
+  if (tokens.length < 3) throw new Error("Phrase too short");
   if (
     tokens[0].type !== Tokenizer.TokenType.BRACKET_OPEN ||
     tokens[tokens.length - 1].type !== Tokenizer.TokenType.BRACKET_CLOSE
   )
-    throw "Phrase must start with [ and end with ]";
+    throw new Error("Phrase must start with [ and end with ]");
   const brackets = countOpenBrackets(tokens);
-  if (brackets > 0) throw brackets + " bracket(s) open [";
-  if (brackets < 0) throw Math.abs(brackets) + " too many closed bracket(s) ]";
+  if (brackets > 0) throw new Error(brackets + " bracket(s) open [");
+  if (brackets < 0)
+    throw new Error(Math.abs(brackets) + " too many closed bracket(s) ]");
   return null;
 }
 

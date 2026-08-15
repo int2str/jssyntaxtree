@@ -29,7 +29,7 @@ function escapeHTML(text) {
 }
 
 function innerBrackets(text, position) {
-  const open = new Array();
+  const open = [];
 
   for (let i = 0; i < text.length; ++i) {
     if (text[i] === "[") open.push(i);
@@ -60,8 +60,6 @@ function updateHighlight(code, highlight, position) {
     highlight.innerHTML = escapeHTML(code.value);
   }
 
-  highlight.style.width = `${code.clientWidth}px`;
-  highlight.style.height = `${code.clientHeight}px`;
   highlight.scrollTop = code.scrollTop;
   highlight.scrollLeft = code.scrollLeft;
 }

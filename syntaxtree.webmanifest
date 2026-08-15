@@ -1,6 +1,6 @@
 {
   "name": "jsSyntaxTree",
-  "name": "jsSyntaxTree",
+  "short_name": "jsSyntaxTree",
   "description": "Draw syntax trees using labelled bracket notation",
   "icons": [
     {

@@ -32,13 +32,13 @@ function parseNode(tokens, current) {
   };
 
   // Get label
-  if (current > tokens.length - 2) throw "Missing label after [";
+  if (current > tokens.length - 2) throw new Error("Missing label after [");
   const label_token = tokens[++current];
   if (
     label_token.type !== Tokenizer.TokenType.STRING &&
     label_token.type !== Tokenizer.TokenType.QUOTED_STRING
   )
-    throw "Expected label string after [";
+    throw new Error("Expected label string after [");
   node.label = tokens[current++].value;
 
   // Check for subscript
@@ -55,7 +55,10 @@ function parseNode(tokens, current) {
       subscript_token.type !== Tokenizer.TokenType.QUOTED_STRING &&
       subscript_token.type !== Tokenizer.TokenType.NUMBER
     )
-      throw current + ": Expected subscript string after _";
+      throw new Error(
+        current +
+          `: Expected ${is_super ? "superscript" : "subscript"} string after ${is_super ? "^" : "_"}`,
+      );
     if (is_super) node.superscript = tokens[current++].value;
     else node.subscript = tokens[current++].value;
   }
@@ -71,7 +74,7 @@ function parseNode(tokens, current) {
   }
 
   if (current >= tokens.length)
-    throw current - 1 + ": Missing closing bracket ] ...";
+    throw new Error(current - 1 + ": Missing closing bracket ] ...");
 
   return [current + 1, node];
 }
@@ -107,7 +110,10 @@ function parseValue(tokens, current) {
       subscript_token.type !== Tokenizer.TokenType.QUOTED_STRING &&
       subscript_token.type !== Tokenizer.TokenType.NUMBER
     )
-      throw current + ": Expected subscript string after _/^";
+      throw new Error(
+        current +
+          `: Expected ${is_super ? "superscript" : "subscript"} string after ${is_super ? "^" : "_"}`,
+      );
     if (is_super) superscript = tokens[current++].value;
     else subscript = tokens[current++].value;
   }
@@ -131,7 +137,9 @@ function parseValue(tokens, current) {
 
     const target_token = tokens[++current];
     if (target_token.type !== Tokenizer.TokenType.NUMBER)
-      throw current + ": Expected column number after -> or <>";
+      throw new Error(
+        current + ": Expected column number after arrow (->, <-, or <>)",
+      );
     arrow = { ends: ends, target: tokens[current++].value };
   }
 
@@ -155,6 +163,8 @@ function parseToken(tokens, current) {
     case Tokenizer.TokenType.QUOTED_STRING:
       return parseValue(tokens, current);
     default:
-      throw "Unexpected " + tokens[current].type + " at idx " + current;
+      throw new Error(
+        "Unexpected " + tokens[current].type + " at idx " + current,
+      );
   }
 }

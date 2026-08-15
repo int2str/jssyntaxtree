@@ -10,17 +10,17 @@ import SvgCanvas from "./svg_canvas.js";
 import * as Parser from "./parser.js";
 
 export default class Tree {
-  constructor(canvas) {
-    this.ALIGN_TOP = 0;
-    this.ALIGN_LEAVES = 1;
-    this.ALIGN_BOTTOM = 2;
+  static ALIGN_TOP = 0;
+  static ALIGN_LEAVES = 1;
+  static ALIGN_BOTTOM = 2;
 
+  constructor(canvas) {
     this.nodecolor = true;
     this.fontsize = 16;
     this.triangles = true;
     this.terminal_lines = true;
     this.subscript = true;
-    this.alignment = this.ALIGN_TOP;
+    this.alignment = Tree.ALIGN_TOP;
     this.canvas = null;
     this.syntax_tree = null;
     this.vscaler = 1;
@@ -29,9 +29,9 @@ export default class Tree {
   #layout(syntax_tree) {
     const drawables = drawableFromNode(this.canvas, syntax_tree);
     const max_depth = getMaxDepth(drawables);
-    if (this.alignment > this.ALIGN_TOP)
-      moveLeafsToBottom(drawables, max_depth);
-    if (this.alignment > this.ALIGN_LEAVES) moveParentsDown(drawables);
+    if (this.alignment > Tree.ALIGN_TOP)
+      moveLeavesToBottom(drawables, max_depth);
+    if (this.alignment > Tree.ALIGN_LEAVES) moveParentsDown(drawables);
     if (this.subscript) calculateAutoSubscript(drawables);
     const has_arrow = calculateDrawablePositions(
       this.canvas,
@@ -65,7 +65,7 @@ export default class Tree {
   }
 
   draw(syntax_tree) {
-    if (this.canvas === null) throw "Canvas must be set first.";
+    if (this.canvas === null) throw new Error("Canvas must be set first.");
     this.syntax_tree = syntax_tree;
     const { drawables, arrowSet, width, height } = this.#layout(syntax_tree);
     this.#render(this.canvas, drawables, arrowSet, width, height);
@@ -74,9 +74,11 @@ export default class Tree {
   downloadSvg() {
     if (!this.syntax_tree) return;
     const svg_canvas = new SvgCanvas(this.canvas);
-    const { drawables, arrowSet, width, height } = this.#layout(this.syntax_tree);
+    const { drawables, arrowSet, width, height } = this.#layout(
+      this.syntax_tree,
+    );
     this.#render(svg_canvas, drawables, arrowSet, width, height);
-    svg_canvas.download('syntax_tree.svg');
+    svg_canvas.download("syntax_tree.svg");
   }
 
   drawNode(drawable, target) {
@@ -96,27 +98,17 @@ export default class Tree {
     } else {
       target.setFillStyle("black");
     }
-    target.text(
-      drawable.label,
-      getDrawableCenter(drawable),
-      drawable.top + 2,
-    );
+    target.text(drawable.label, getDrawableCenter(drawable), drawable.top + 2);
   }
 
   drawSubscript(drawable, target) {
     if (!drawable.subscript && !drawable.superscript) return;
     let offset =
-      1 +
-      getDrawableCenter(drawable) +
-      target.textWidth(drawable.label) / 2;
+      1 + getDrawableCenter(drawable) + target.textWidth(drawable.label) / 2;
     target.setFontSize((this.fontsize * 3) / 4);
     if (drawable.subscript) {
       offset += target.textWidth(drawable.subscript) / 2;
-      target.text(
-        drawable.subscript,
-        offset,
-        drawable.top + this.fontsize / 2,
-      );
+      target.text(drawable.subscript, offset, drawable.top + this.fontsize / 2);
     } else {
       offset += target.textWidth(drawable.superscript) / 2;
       target.text(drawable.superscript, offset, drawable.top);
@@ -125,7 +117,8 @@ export default class Tree {
   }
 
   drawConnector(parent, child, target) {
-    const isTriangle = this.triangles && child.is_leaf && child.label.includes(" ");
+    const isTriangle =
+      this.triangles && child.is_leaf && child.label.includes(" ");
     if (!this.terminal_lines && child.is_leaf && !isTriangle) return;
     if (isTriangle) {
       const text_width = target.textWidth(child.label);
@@ -164,7 +157,8 @@ export default class Tree {
         arrow.bottom,
       );
       if (arrow.ends_to) this.drawArrowHead(arrow.to_x, arrow.to_y, target);
-      if (arrow.ends_from) this.drawArrowHead(arrow.from_x, arrow.from_y, target);
+      if (arrow.ends_from)
+        this.drawArrowHead(arrow.from_x, arrow.from_y, target);
     }
   }
 
@@ -357,11 +351,10 @@ function getMaxBottom(drawable) {
   );
 }
 
-function moveLeafsToBottom(drawable, bottom) {
+function moveLeavesToBottom(drawable, bottom) {
   if (drawable.is_leaf) drawable.depth = bottom;
-  drawable.children.forEach((child) => moveLeafsToBottom(child, bottom));
+  drawable.children.forEach((child) => moveLeavesToBottom(child, bottom));
 }
-
 
 function moveParentsDown(drawable) {
   if (drawable.is_leaf) return;
@@ -381,7 +374,7 @@ function calculateAutoSubscript(drawables) {
   const map = countNodes(drawables);
   const keys = Array.from(map) //
     .filter(([, count]) => count > 1) //
-    .map(([key, ]) => key);
+    .map(([key]) => key);
   assignSubscripts(drawables, keys, new Map());
 }
 

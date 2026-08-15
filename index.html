@@ -1,103 +1,137 @@
 <!doctype html>
-<title>jsSyntaxTree</title>
-<link rel="stylesheet" type="text/css" href="default.css" />
-<link rel="manifest" href="syntaxtree.webmanifest" />
-<script type="module" src="syntaxtree.js" async></script>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="author" content="Andre Eisenbach" />
-<meta
-  name="description"
-  content="jsSyntaxtree - a syntax tree generator for linguists. Draw syntax trees from labelled bracket notation phrases and include them into your assignment/homework."
-/>
-<meta
-  name="keywords"
-  content="syntax tree, linguists, homework, labelled bracket notation"
-/>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>jsSyntaxTree</title>
+    <meta name="author" content="Andre Eisenbach" />
+    <meta
+      name="description"
+      content="jsSyntaxtree - a syntax tree generator for linguists. Draw syntax trees from labelled bracket notation phrases and include them into your assignment/homework."
+    />
+    <meta
+      name="keywords"
+      content="syntax tree, linguists, homework, labelled bracket notation"
+    />
+    <link rel="stylesheet" href="default.css" />
+    <link rel="manifest" href="syntaxtree.webmanifest" />
+    <script type="module" src="syntaxtree.js"></script>
+  </head>
+  <body>
+    <h1>jsSyntaxTree</h1>
 
-<h1>jsSyntaxTree</h1>
+    <div id="options">
+      <div class="option">
+        <input type="checkbox" id="nodecolor" checked="checked" />
+        <label for="nodecolor" title="Colored tree nodes"
+          ><span>Color</span></label
+        >
+      </div>
+      <div class="option">
+        <input type="checkbox" id="autosub" checked="checked" />
+        <label for="autosub" title="Automatic subscript"
+          ><span>Auto subscript</span></label
+        >
+      </div>
+      <div class="option">
+        <input type="checkbox" id="triangles" checked="checked" />
+        <label for="triangles" title="Enable triangles"
+          ><span>Triangles</span></label
+        >
+      </div>
+      <div class="option">
+        <input type="checkbox" id="terminal_lines" checked="checked" />
+        <label for="terminal_lines" title="Show terminal lines"
+          ><span>Terminal lines</span></label
+        >
+      </div>
+      <div class="option separator" id="alignment_select">
+        <input
+          type="radio"
+          id="align_top"
+          name="align"
+          value="top"
+          checked="checked"
+        />
+        <label for="align_top" title="Align all nodes towards the top"
+          ><span>Top aligned</span></label
+        >
+        <input type="radio" id="align_leaves" name="align" value="leaves" />
+        <label for="align_leaves" title="Align leaves at the bottom"
+          ><span>Align leaves</span></label
+        >
+        <input type="radio" id="align_bottom" name="align" value="bottom" />
+        <label for="align_bottom" title="Align all nodes towards the bottom"
+          ><span>Bottom aligned</span></label
+        >
+      </div>
+      <div class="option separator">
+        <input type="checkbox" id="highlighting" checked="checked" />
+        <label for="highlighting" title="Highlight brackets in text area"
+          ><span>Highlight</span></label
+        >
+      </div>
+      <div class="option separator" id="font_select">
+        <div>
+          <select id="font">
+            <option value="sans-serif" selected="selected">Sans-serif</option>
+            <option value="serif">Serif</option>
+            <option value="monospace">Monospace</option>
+          </select>
+          <select id="fontsize">
+            <option value="12">12</option>
+            <option value="14">14</option>
+            <option value="16" selected="selected">16</option>
+            <option value="18">18</option>
+            <option value="20">20</option>
+            <option value="24">24</option>
+            <option value="36">36</option>
+          </select>
+        </div>
+      </div>
+      <div class="option separator" id="spacing_select">
+        <div>
+          <input
+            type="range"
+            id="spacing"
+            min="75"
+            max="150"
+            value="100"
+            title="Aspect ratio"
+          />
+        </div>
+      </div>
+    </div>
 
-<div id="options">
-  <div class="option">
-    <input type="checkbox" id="nodecolor" checked="checked" />
-    <label for="nodecolor" title="Colored tree nodes"><span>Color</span></label>
-  </div>
-  <div class="option">
-    <input type="checkbox" id="autosub" checked="checked" />
-    <label for="autosub" title="Automatic subscript"
-      ><span>Auto subscript</span></label
-    >
-  </div>
-  <div class="option">
-    <input type="checkbox" id="triangles" checked="checked" />
-    <label for="triangles" title="Enable triangles"
-      ><span>Triangles</span></label
-    >
-  </div>
-  <div class="option">
-    <input type="checkbox" id="terminal_lines" checked="checked" />
-    <label for="terminal_lines" title="Show terminal lines"><span>Terminal lines</span></label>
-  </div>
-  <div class="option separator" id="alignment_select">
-    <input type="radio" id="align_top" name="align" value="top" checked="checked">
-    <label for="align_top" title="Align all nodes towards the top"><span>Top aligned<span></label>
-    <input type="radio" id="align_leaves" name="align" value="leaves">
-    <label for="align_leaves" title="Align leaves at the bottom"><span>Align leaves<span></label>
-    <input type="radio" id="align_bottom" name="align" value="bottom">
-    <label for="align_bottom" title="Align all nodes towards the bottom"><span>Top aligned<span></label>
-  </div>
-  <div class="option separator">
-    <input type="checkbox" id="highlighting" checked="checked" />
-    <label for="highlighting" title="Highlight brackets in text area"
-      ><span>Highlight</span></label
-    >
-  </div>
-  <div class="option separator" id="font_select">
-    <div><select id="font">
-      <option value="sans-serif" selected="selected">Sans-serif</option>
-      <option value="serif">Serif</option>
-      <option value="monospace">Monospace</option>
-      ></select><select id="fontsize">
-      <option value="12">12</option>
-      <option value="14">14</option>
-      <option value="16" selected="selected">16</option>
-      <option value="18">18</option>
-      <option value="20">20</option>
-      <option value="24">24</option>
-      <option value="36">36</option></select
-    ></div>
-  </div>
-  <div class="option separator" id="spacing_select">
-    <div><input type="range" id="spacing" min="75" max="150" value="100" title="Aspect ratio"/></div>
-  </div>
-</div>
-
-<div id="input">
-  <h2>Phrase (labelled bracket notation)</h2>
-  <div id="editor">
-    <pre id="highlight"></pre>
-    <textarea rows="5" id="code">
+    <div id="input">
+      <h2>Phrase (labelled bracket notation)</h2>
+      <div id="editor">
+        <pre id="highlight"></pre>
+        <textarea rows="5" id="code">
 [S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees ->1]]]</textarea
-    >
-  </div>
-  <span id="parse-error"></span>
-</div>
+        >
+      </div>
+      <span id="parse-error"></span>
+    </div>
 
-<div id="tree"><canvas id="canvas" width="100" height="100"></canvas></div>
+    <div id="tree"><canvas id="canvas" width="100" height="100"></canvas></div>
 
-<div id="download">
-  <button id="download_png" title="Download PNG"></button>
-  <button id="download_svg" title="Download SVG"></button>
-</div>
+    <div id="download">
+      <button id="download_png" title="Download PNG"></button>
+      <button id="download_svg" title="Download SVG"></button>
+    </div>
 
-<div id="tip"></div>
+    <div id="tip"></div>
 
-<footer>
-  &copy; 2003-2025 IronCreek Software<br />
-  Idea and linguistic guidance - <b>Mei Eisenbach</b><br />
-  Coding &amp; design - <b>Andr&eacute; Eisenbach</b><br />
-  <a href="https://github.com/int2str/jssyntaxtree"
-    >https://github.com/int2str/jssyntaxtree</a
-  >
-  <div id="version">&nbsp;</div>
-</footer>
+    <footer>
+      &copy; 2003-2025 IronCreek Software<br />
+      Idea and linguistic guidance - <b>Mei Eisenbach</b><br />
+      Coding &amp; design - <b>Andr&eacute; Eisenbach</b><br />
+      <a href="https://github.com/int2str/jssyntaxtree"
+        >https://github.com/int2str/jssyntaxtree</a
+      >
+    </footer>
+
+    <div id="version">&nbsp;</div>
+  </body>
+</html>
