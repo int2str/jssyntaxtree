@@ -1,7 +1,7 @@
 // jsSyntaxTree - A syntax tree graph generator
 // (c)2020 Andre Eisenbach <andre@ironcreek.net>
 
-const CACHE_VERSION = 15;
+const CACHE_VERSION = 22;
 const CACHE_NAME = `syntaxtree-cache-v${CACHE_VERSION}`;
 const CACHE_FILES = [
   "./",

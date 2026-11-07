@@ -18,33 +18,57 @@
     <script type="module" src="syntaxtree.js"></script>
   </head>
   <body>
-    <h1>jsSyntaxTree</h1>
+    <header id="header">
+      <div class="logo-group">
+        <svg
+          class="logo"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="4" r="2.5"></circle>
+          <circle cx="6" cy="20" r="2.5"></circle>
+          <circle cx="18" cy="20" r="2.5"></circle>
+          <path d="M12 6.5v6"></path>
+          <path d="M6 17.5l6-5 6 5"></path>
+        </svg>
+        <h1>jsSyntaxTree</h1>
+      </div>
+      <div id="version">&nbsp;</div>
+    </header>
 
     <div id="options">
-      <div class="option">
-        <input type="checkbox" id="nodecolor" checked="checked" />
-        <label for="nodecolor" title="Colored tree nodes"
-          ><span>Color</span></label
-        >
+      <div class="option-group">
+        <div class="option">
+          <input type="checkbox" id="nodecolor" checked="checked" />
+          <label for="nodecolor" title="Colored tree nodes"
+            ><span>Color</span></label
+          >
+        </div>
+        <div class="option">
+          <input type="checkbox" id="autosub" checked="checked" />
+          <label for="autosub" title="Automatic subscript"
+            ><span>Auto subscript</span></label
+          >
+        </div>
+        <div class="option">
+          <input type="checkbox" id="triangles" checked="checked" />
+          <label for="triangles" title="Enable triangles"
+            ><span>Triangles</span></label
+          >
+        </div>
+        <div class="option">
+          <input type="checkbox" id="terminal_lines" checked="checked" />
+          <label for="terminal_lines" title="Show terminal lines"
+            ><span>Terminal lines</span></label
+          >
+        </div>
       </div>
-      <div class="option">
-        <input type="checkbox" id="autosub" checked="checked" />
-        <label for="autosub" title="Automatic subscript"
-          ><span>Auto subscript</span></label
-        >
-      </div>
-      <div class="option">
-        <input type="checkbox" id="triangles" checked="checked" />
-        <label for="triangles" title="Enable triangles"
-          ><span>Triangles</span></label
-        >
-      </div>
-      <div class="option">
-        <input type="checkbox" id="terminal_lines" checked="checked" />
-        <label for="terminal_lines" title="Show terminal lines"
-          ><span>Terminal lines</span></label
-        >
-      </div>
+
       <div class="option separator" id="alignment_select">
         <input
           type="radio"
@@ -65,20 +89,22 @@
           ><span>Bottom aligned</span></label
         >
       </div>
+
       <div class="option separator">
         <input type="checkbox" id="highlighting" checked="checked" />
         <label for="highlighting" title="Highlight brackets in text area"
           ><span>Highlight</span></label
         >
       </div>
+
       <div class="option separator" id="font_select">
         <div>
-          <select id="font">
+          <select id="font" title="Font family">
             <option value="sans-serif" selected="selected">Sans-serif</option>
             <option value="serif">Serif</option>
             <option value="monospace">Monospace</option>
           </select>
-          <select id="fontsize">
+          <select id="fontsize" title="Font size">
             <option value="12">12</option>
             <option value="14">14</option>
             <option value="16" selected="selected">16</option>
@@ -89,8 +115,26 @@
           </select>
         </div>
       </div>
+
       <div class="option separator" id="spacing_select">
-        <div>
+        <div class="spacing-container" title="Aspect ratio">
+          <svg
+            class="spacing-icon"
+            viewBox="0 0 24 24"
+            width="15"
+            height="15"
+            fill="none"
+            stroke="#64748b"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
           <input
             type="range"
             id="spacing"
@@ -107,14 +151,14 @@
       <h2>Phrase (labelled bracket notation)</h2>
       <div id="editor">
         <pre id="highlight"></pre>
-        <textarea rows="5" id="code">
-[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees ->1]]]</textarea
-        >
+        <textarea rows="4" id="code" spellcheck="false">[S [NP jsSyntaxTree][VP [V creates][NP nice syntax trees ->1]]]</textarea>
       </div>
       <span id="parse-error"></span>
     </div>
 
-    <div id="tree"><canvas id="canvas" width="100" height="100"></canvas></div>
+    <div id="tree">
+      <canvas id="canvas" width="100" height="100" title="Click to download PNG"></canvas>
+    </div>
 
     <div id="download">
       <button id="download_png" title="Download PNG"></button>
@@ -127,11 +171,12 @@
       &copy; 2003-2025 IronCreek Software<br />
       Idea and linguistic guidance - <b>Mei Eisenbach</b><br />
       Coding &amp; design - <b>Andr&eacute; Eisenbach</b><br />
-      <a href="https://github.com/int2str/jssyntaxtree"
+      <a
+        href="https://github.com/int2str/jssyntaxtree"
+        target="_blank"
+        rel="noopener noreferrer"
         >https://github.com/int2str/jssyntaxtree</a
       >
     </footer>
-
-    <div id="version">&nbsp;</div>
   </body>
 </html>
